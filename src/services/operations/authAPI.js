@@ -113,7 +113,7 @@ export function login(email, password, navigate) {
          navigate("/dashboard/my-profile")
       } catch (error) {
          console.log("LOGIN API ERROR............", error)
-         toast.error(error.response.data.message)
+         toast.error(error?.data?.message || "Couldn't Login try again")
       }
       dispatch(setLoading(false))
       // 

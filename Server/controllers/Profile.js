@@ -26,7 +26,7 @@ exports.updateProfile = async (req, res) => {
          LastName: LastName,
       }
          , { new: true, });
-         
+
       const profileID = userD.additionalDetails;
 
       const updatedProfile = await Profile.findByIdAndUpdate(profileID,
@@ -39,8 +39,12 @@ exports.updateProfile = async (req, res) => {
          },
          { new: true }
       );
+
+      const updatedUser = await User.findById(userD._id).populate("additionalDetails");
+
       return res.status(200).json({
          success: true,
+         data: updatedUser,
          message: "Profile details updated Succesfully.",
       });
 
@@ -131,7 +135,6 @@ exports.updateDisplayPicture = async (req, res) => {
       const image = await uploadMedia(file, process.env.FOLDER_NAME, 1000,
          1000);
 
-      console.log(image)
       const updatedUser = await User.findByIdAndUpdate(
          { _id: userId },
          { image: image.secure_url },
@@ -149,3 +152,30 @@ exports.updateDisplayPicture = async (req, res) => {
       })
    }
 }
+
+exports.getEnrolledCourses = async (req, res) => {
+   try {
+      const userId = req.user.id
+      const user = await User.findById(userId)
+         .populate("courses")
+         .exec();
+
+      if (!user) {
+         return res.status(400).json({
+            success: false,
+            message: `Could not find user with id: ${userId}`,
+         })
+      }
+
+      return res.status(200).json({
+         success: true,
+         data: user.courses,
+      })
+   
+   } catch (error) {
+      return res.status(500).json({
+         success: false,
+         message: error.message,
+      })
+   }
+};

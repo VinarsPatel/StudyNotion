@@ -7,7 +7,7 @@ exports.cloudinaryConnect = async ()=>{
          api_key : process.env.API_KEY,
          api_secret : process.env.API_SECRET
       })
-      console.log("Clodinary connection succesfull.");
+      console.log("Cloudinary connection succesfull.");
    } catch (error) {
       console.log("Connection to cloudinary failed.");
       console.error(error);

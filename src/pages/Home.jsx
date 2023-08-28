@@ -21,7 +21,7 @@ const Home = () => {
 
                <Link to={"/signup"}>
 
-                  <div className='group gap-[0.375rem]  mx-auto rounded-full font-bold bg-richblack-800 text-richblack-200 transition-all hover:scale-95 w-fit' style={{ "box-shadow": "0px -1px 0px 0px rgba(255, 255, 255, 0.18) inset" }}>
+                  <div className='group gap-[0.375rem]  mx-auto rounded-full font-bold bg-richblack-800 text-richblack-200 transition-all hover:scale-95 w-fit' style={{ "boxShadow": "0px -1px 0px 0px rgba(255, 255, 255, 0.18) inset" }}>
 
                      <div className='flex flex-row items-center gap-[0.625rem] py-[0.375rem] px-[1.125rem] group-hover:bg-richblack-900 '>
                         <p className='text-center font-medium leading-6'>Become an Instructor</p>
@@ -50,7 +50,7 @@ const Home = () => {
             </div>
 
             <div className='mx-3 my-16 w-5/6'
-               style={{ "box-shadow": "20px 20px 0px 0px #F5F5F5" }}
+               style={{ "boxShadow": "20px 20px 0px 0px #F5F5F5" }}
             >
                <video muted loop autoPlay>
                   <source src={banner} type='video/mp4'></source>
@@ -171,7 +171,7 @@ const Home = () => {
 
             <div className='px-28 py-20 flex flex-col lg1:flex-row justify-center items-center gap-24 bg-richblack-900 mt-20'>
 
-               <img src={instructor} alt='Become an Tutor' className=' sm:w-[90%] lg1:w-[100%] max-w-fit' style={{ "box-shadow": "-20px -20px 0px 0px #FFF" }} />
+               <img src={instructor} alt='Become an Tutor' className=' sm:w-[90%] lg1:w-[100%] max-w-fit' style={{ "boxShadow": "-20px -20px 0px 0px #FFF" }} />
 
 
                <div className={`flex flex-col gap-3 w-fit max-w-[480px]`}>

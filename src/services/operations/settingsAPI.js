@@ -94,11 +94,11 @@ export function updateDisplayPicture(token, formData) {
        if (!response.data.success) {
          throw new Error(response.data.message)
        }
-       const userImage = response.data.updatedUser.image
-         ? response.data.updatedUser.image
-         : `https://api.dicebear.com/5.x/initials/svg?seed=${response.data.updatedUser.firstName} ${response.data.updatedUser.lastName}`
+      //  const userImage = response.data.updatedUser.image
+      //    ? response.data.updatedUser.image
+      //    : `https://api.dicebear.com/5.x/initials/svg?seed=${response.data.updatedUser.firstName} ${response.data.updatedUser.lastName}`
        dispatch(
-         setUser({ ...response.data.updatedUser, image: userImage })
+         setUser(response.data.data)
        )
        toast.success("Profile Updated Successfully")
      } catch (error) {

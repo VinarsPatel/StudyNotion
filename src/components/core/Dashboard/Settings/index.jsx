@@ -1,6 +1,8 @@
 import React from 'react'
 import ChangeProfilePicture from './ChangeProfilePicture'
-import ChangeProfile from './ChangeProfile'
+import EditProfile from './EditProfile'
+import ChangePassword from './ChangePassword'
+import DeleteAccount from './DeleteAccount'
 
 const Settings = () => {
    return (
@@ -8,8 +10,12 @@ const Settings = () => {
          <h1 className="mb-14 text-3xl font-medium text-richblack-5">
             Edit Profile
          </h1>
-         <ChangeProfilePicture />
-         <ChangeProfile/>
+         <div className='flex flex-col gap-5'>
+            <ChangeProfilePicture />
+            <EditProfile />
+            <ChangePassword/>
+            <DeleteAccount/>
+         </div>
       </div>
    )
 }

@@ -270,19 +270,11 @@ exports.logIn = async (req, res) => {
 exports.changePassword = async (req, res) => {
    //change password can be used after login
    try {
-      //old,new.confirm
-      const { currentPassword, newPassword, confirmPassword } = req.body;
+      const { currentPassword, newPassword } = req.body;
       const userID = req.user.id;
 
-      //validation
-      if (newPassword != confirmPassword) {
-         return res.status(400).json({
-            success: false,
-            message: 'Password and ConfirmPassword must be same.',
-         });
-      }
+      const user = await User.findById(userID);   
 
-      const user = User.findById(userID);
       if (await bcrypt.compare(currentPassword, user.password)) {
 
          //password is correct so change password
@@ -311,19 +303,19 @@ exports.changePassword = async (req, res) => {
 
          //Generate cookie
          const options = {
-            expires: new Date(Date.now + 3 * 24 * 12 * 3600 * 1000),
+            expires: new Date(Date.now() + 3 * 24 * 12 * 3600 * 1000),
             httpOnly: true
          }
-
         
 
          // Send notification email
          try {
             const emailResponse = await mailSender(
                updatedUser.email,
+               "Password Updataed Succesfully.",
                passwordUpdated(
                   updatedUser.email,
-                  `Password updated successfully for ${updatedUser.firstName} ${updatedUser.lastName}`
+                  `${updatedUser.firstName} ${updatedUser.lastName}`
                )
             );
             console.log("Email sent successfully:", emailResponse.response);

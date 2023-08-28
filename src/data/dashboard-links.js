@@ -6,13 +6,13 @@ export const sidebarLinks = [
     path: "/dashboard/my-profile",
     icon: "VscAccount",
   },
-  {
-    id: 2,
-    name: "Dashboard",
-    path: "/dashboard/instructor",
-    type: ACCOUNT_TYPE.INSTRUCTOR,
-    icon: "VscDashboard",
-  },
+//   {
+//     id: 2,
+//     name: "Dashboard",
+//     path: "/dashboard/instructor",
+//     type: ACCOUNT_TYPE.INSTRUCTOR,
+//     icon: "VscDashboard",
+//   },
   {
     id: 3,
     name: "My Courses",
@@ -36,6 +36,13 @@ export const sidebarLinks = [
   },
   {
     id: 6,
+    name: "Wishlist",
+    path: "/dashboard/my-wishlist",
+    type: ACCOUNT_TYPE.STUDENT,
+    icon: "VscBookmark",
+  },
+  {
+    id: 7,
     name: "Purchase History",
     path: "/dashboard/purchase-history",
     type: ACCOUNT_TYPE.STUDENT,

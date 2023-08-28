@@ -6,35 +6,48 @@ require("dotenv").config();
 exports.createSubSection = async (req, res) => {
    try {
       //get data
-      const { title, description, timeDuration, sectionID } = req.body;
+      const { title, description, sectionID } = req.body;
       const file = req.files.file;
 
-      if (!title || !description || !timeDuration || !file || !sectionID) {
+      if (!title || !description || !file || !sectionID) {
          return res.status(400).json({
             success: false,
             message: "Fill in all the details."
          });
       }
 
+      const section = await Section.findById(sectionID);
+      if(!section){
+         return res.status(500).json({
+            success: false,
+            message: "Section doesn't exist."
+         });
+      }
+
       //upload video file to cloudinary
       const video = await uploadMedia(file, process.env.FOLDER_NAME);
+   
+      const duration = Math.floor(video.duration);
 
       const newSubSection = await SubSection.create({
          title, //title:title ? 🟩🟩,
          description,
-         timeDuration,
-         videoUrl:video.secure_url,
+         timeDuration: duration,
+         videoUrl: video.secure_url,
       });
 
-      const updatedSection = await Section.findByIdAndUpdate(sectionID ,
+      const updatedSection = await Section.findByIdAndUpdate(sectionID,
          {
             $push: {
                subSections: newSubSection._id,
+            },
+            $inc: {
+               totalTimeDuration: duration,
             }
          }, { new: true }
       )
-      .populate("subSections");
-         console.log(updatedSection);
+         .populate("subSections");
+      console.log(updatedSection);
 
       return res.status(200).json({
          success: true,
@@ -59,31 +72,31 @@ exports.updateSubSection = async (req, res) => {
       const { title, description, timeDuration, subSectionID, updateVideo } = req.body;
       const file = req.files.file;
 
-      if (!title || !description || !timeDuration || (!file && updateVideo==true) || !subSectionID) {
+      if (!title || !description || !timeDuration || (!file && updateVideo == true) || !subSectionID) {
          return res.status(400).json({
             success: false,
             message: "Fill in all the details."
          });
       }
 
-      if (updateVideo==true) {
+      if (updateVideo == true) {
          const video = await uploadMedia(file, process.env.FOLDER_NAME);
 
 
-         const updatedSubSection = await SubSection.findByIdAndUpdate(subSectionID,{
+         const updatedSubSection = await SubSection.findByIdAndUpdate(subSectionID, {
             title, //title:title ? 🟩🟩,
             description,
             timeDuration,
             videoUrl: video.secure_url,
-         },{new:true});
+         }, { new: true });
       }
 
       else {
-         const updatedSubSection = await SubSection.findByIdAndUpdate(subSectionID,{
+         const updatedSubSection = await SubSection.findByIdAndUpdate(subSectionID, {
             title, //title:title ? 🟩🟩,
             description,
             timeDuration,
-         },{new:true});
+         }, { new: true });
       }
       //populate🟥🟩
 

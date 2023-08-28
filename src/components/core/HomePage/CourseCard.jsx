@@ -6,7 +6,7 @@ const CourseCard = ({ currCard, setCurrCard, data }) => {
 
    return (
       <div className={`${currCard === data.heading ? " bg-white " : " bg-richblack-800 "} flex flex-col justify-between md:h-[430px] md:w-[250px] lg:w-[300px] lg:h-[330px]`}
-         style={{ "box-shadow": `${currCard === data.heading ? "15px 15px 0px 0px #ffd60a " : " "}`, }}
+         style={{ "boxShadow": `${currCard === data.heading ? "15px 15px 0px 0px #ffd60a " : " "}`, }}
          onClick={() => { setCurrCard(data.heading) }}
       >
          <div className='px-6 py-8 flex flex-col gap-3 '>

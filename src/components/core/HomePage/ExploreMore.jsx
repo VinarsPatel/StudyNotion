@@ -9,7 +9,6 @@ const ExploreMore = () => {
    const [currCard, setCurrCard] = useState(data[0].courses[0].heading);
 
    const setMyCards = (value) => {
-      console.log("hiii");
       setCurrTab(value);
       const result = data.filter((ele) => ele.tag === value);
       setCourses(result[0].courses);
