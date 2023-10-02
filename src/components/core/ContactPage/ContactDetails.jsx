@@ -14,8 +14,7 @@ const contactDetails = [
     icon: "BiWorld",
     heading: "Visit us",
     description: "Come and say hello at our office HQ.",
-    details:
-      "E1-306, Vadodara, Gujarat-390007",
+    details: "E1-306, Vadodara, Gujarat-390007",
   },
   {
     icon: "IoCall",
@@ -27,7 +26,7 @@ const contactDetails = [
 
 const ContactDetails = () => {
   return (
-    <div className="flex flex-col gap-6 rounded-xl bg-richblack-800 p-4 lg:p-6  min-w-[400px]   ">
+    <div className="flex min-w-[400px] flex-col gap-6 rounded-xl bg-richblack-800 p-4  lg:p-6   ">
       {contactDetails.map((ele, i) => {
         let Icon = Icon1[ele.icon] || Icon2[ele.icon] || Icon3[ele.icon]
         return (

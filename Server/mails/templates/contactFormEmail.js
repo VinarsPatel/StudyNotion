@@ -1,12 +1,12 @@
 exports.contactUsEmailtoUser = (
-    email,
-    firstName,
-    lastName,
-    message,
-    phoneNo,
-    countryCode
-  ) => {
-    return `<!DOCTYPE html>
+  email,
+  firstName,
+  lastName,
+  message,
+  phoneNo,
+  countryCode
+) => {
+  return `<!DOCTYPE html>
     <html>
     
     <head>
@@ -94,16 +94,16 @@ exports.contactUsEmailtoUser = (
     </body>
     
     </html>`
-  }
+}
 exports.contactUsEmailtoService = (
-    email,
-    firstName,
-    lastName,
-    message,
-    phoneNo,
-    countryCode
-  ) => {
-    return `<!DOCTYPE html>
+  email,
+  firstName,
+  lastName,
+  message,
+  phoneNo,
+  countryCode
+) => {
+  return `<!DOCTYPE html>
     <html>
     
     <head>
@@ -162,4 +162,4 @@ exports.contactUsEmailtoService = (
     </body>
     
     </html>`
-  }
+}

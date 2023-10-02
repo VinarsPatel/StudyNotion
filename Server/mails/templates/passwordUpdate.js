@@ -1,6 +1,6 @@
-require("dotenv").config();
+require("dotenv").config()
 exports.passwordUpdated = (email, name) => {
-	return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
     <html>
     
     <head>
@@ -72,5 +72,5 @@ exports.passwordUpdated = (email, name) => {
         </div>
     </body>
     
-    </html>`;
-};
+    </html>`
+}

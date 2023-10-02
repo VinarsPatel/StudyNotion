@@ -1,5 +1,5 @@
 exports.paymentSuccessEmail = (name, amount, orderId, paymentId) => {
-    return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
       <html>
       
       <head>
@@ -82,4 +82,4 @@ exports.paymentSuccessEmail = (name, amount, orderId, paymentId) => {
       </body>
       
       </html>`
-  }
+}

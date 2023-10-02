@@ -1,6 +1,6 @@
-require("dotenv").config();
+require("dotenv").config()
 exports.courseEnrollmentEmail = (courseName, name) => {
-    return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
     <html>
     
     <head>
@@ -84,5 +84,5 @@ exports.courseEnrollmentEmail = (courseName, name) => {
         </div>
     </body>
     
-    </html>`;
-  };
+    </html>`
+}

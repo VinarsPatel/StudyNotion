@@ -1,6 +1,6 @@
-require("dotenv").config();
+require("dotenv").config()
 exports.resetPasswordLinkTemplate = (email, name, recoverylink) => {
-   return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
     <html>
     
     <head>
@@ -74,5 +74,5 @@ exports.resetPasswordLinkTemplate = (email, name, recoverylink) => {
         </div>
     </body>
     
-    </html>`;
-};
+    </html>`
+}

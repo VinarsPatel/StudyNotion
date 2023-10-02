@@ -1,68 +1,70 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
-const userSchema = new mongoose.Schema({
-   firstName: {
+const userSchema = new mongoose.Schema(
+  {
+    firstName: {
       type: String,
       required: true,
       trim: true,
-   },
-   lastName: {
+    },
+    lastName: {
       type: String,
       required: true,
       trim: true,
-   },
-   email: {
+    },
+    email: {
       type: String,
       required: true,
       trim: true,
-   },
-   password: {
+    },
+    password: {
       type: String,
       required: true,
-   },
-   token: {
+    },
+    token: {
       type: String,
-   },
-   tokenExpiryTime: {
+    },
+    tokenExpiryTime: {
       type: Date,
-   },
-   // contactNumber: {
-   //    type: Number,
-   //    required: true
-   // },
-   accountType: {
+    },
+    // contactNumber: {
+    //    type: Number,
+    //    required: true
+    // },
+    accountType: {
       type: String,
       enum: ["Student", "Instructor", "Admin"],
       required: true,
-   },
-   image: {
+    },
+    image: {
       type: String,
-   },
-   additionalDetails: {
+    },
+    additionalDetails: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Profile",
-   },
-   courses: [
+    },
+    courses: [
       {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "Course"
-      }
-   ],
-   courseProgress: [
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+      },
+    ],
+    courseProgress: [
       {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "CourseProgress"
-      }
-   ],
-   active: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CourseProgress",
+      },
+    ],
+    active: {
       type: Boolean,
       default: true,
-   },
-   approved: {
+    },
+    approved: {
       type: Boolean,
       default: true,
-   },
-},
-   { timestamps: true });
+    },
+  },
+  { timestamps: true }
+)
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema)
