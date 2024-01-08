@@ -58,9 +58,9 @@ const NestedView = ({ handleChangeEditSection }) => {
         course?.content.map((section) => (
           <details
             key={section._id}
-            className="w-full py-3 text-base text-richblack-50"
+            className="x w-full py-3 text-base text-richblack-50"
           >
-            <summary className="flex justify-between border-b border-b-richblack-600 pb-2 font-semibold ">
+            <summary className="xsummary flex justify-between border-b border-b-richblack-600 pb-2 font-semibold ">
               <div className="flex w-full justify-between">
                 <div className="flex items-center gap-3 ">
                   <HiOutlineMenu className="cursor-pointer text-xl" />

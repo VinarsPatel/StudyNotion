@@ -2,6 +2,7 @@ const Course = require("../models/Course")
 const Category = require("../models/Category")
 const { uploadMedia } = require("../utils/mediaUploader")
 const User = require("../models/User")
+const { ACCOUNT_TYPE } = require("../utils/constants")
 
 exports.createCourse = async (req, res) => {
   try {
@@ -51,6 +52,19 @@ exports.createCourse = async (req, res) => {
       })
     }
     const thumbnailImg = await uploadMedia(thumbnail, process.env.FOLDER_NAME)
+    fs.readdir("./tmp", (err, files) => {
+      if (err) console.log(err)
+      else {
+        files.forEach((file) => {
+          fs.unlink(`./tmp/${file}`, (err) => {
+            if (err) {
+              throw err
+            }
+            console.log("Delete File successfully.")
+          })
+        })
+      }
+    })
 
     //create entry of course in DB
 
@@ -138,7 +152,7 @@ exports.getAllCourses = async (req, res) => {
   }
 }
 
-exports.getCourseDetails = async (req, res) => {
+exports.getFullCourseDetails = async (req, res) => {
   try {
     const { courseID } = req.body
 
@@ -159,7 +173,6 @@ exports.getCourseDetails = async (req, res) => {
       .populate("ratingAndReview")
       .populate("instructor")
       .populate("category")
-      .populate("tag")
       .populate("studentsEnrolled")
       .exec()
 
@@ -175,8 +188,39 @@ exports.getCourseDetails = async (req, res) => {
     })
   }
 }
+exports.getCourseDetails = async (req, res) => {
+  try {
+    const { courseID } = req.body
 
-//👻🟩🟥👻Update course is pending
+    if (!courseID) {
+      return res.status(400).json({
+        success: false,
+        message: "course id missing.",
+      })
+    }
+
+    const course = await Course.findById(courseID)
+      .populate({
+        path: "content",
+        populate: {
+          path: "subSections",
+        },
+      })
+      .exec()
+
+    return res.status(200).json({
+      success: true,
+      message: "Course detail",
+      data: course,
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get course detail.",
+    })
+  }
+}
+
 exports.updateCourse = async (req, res) => {
   try {
     //get data
@@ -246,6 +290,19 @@ exports.updateCourse = async (req, res) => {
 
     if (thumbnail != null) {
       var thumbnailImg = await uploadMedia(thumbnail, process.env.FOLDER_NAME)
+      fs.readdir("./tmp", (err, files) => {
+        if (err) console.log(err)
+        else {
+          files.forEach((file) => {
+            fs.unlink(`./tmp/${file}`, (err) => {
+              if (err) {
+                throw err
+              }
+              console.log("Delete File successfully.")
+            })
+          })
+        }
+      })
     }
     //create entry of course in DB
     const update = {}
@@ -259,11 +316,13 @@ exports.updateCourse = async (req, res) => {
     if (status) update.status = status
     if (instructions) update.instructions = JSON.parse(instructions)
 
-    const updatedCourse = await Course.findByIdAndUpdate(courseID, update)
+    const updatedCourse = await Course.findByIdAndUpdate(courseID, update, {
+      new: true,
+    })
 
     return res.status(200).json({
       success: true,
-      message: "Course Created Succesfully.",
+      message: "Course Updated Succesfully.",
       data: updatedCourse,
     })
   } catch (error) {
@@ -272,6 +331,66 @@ exports.updateCourse = async (req, res) => {
       success: false,
       message: "Course updation failed.",
       error: error.message,
+    })
+  }
+}
+
+exports.getInstructorCourses = async (req, res) => {
+  try {
+    const { id, accountType } = req.user
+    if (accountType !== ACCOUNT_TYPE.INSTRUCTOR) {
+      return res.status(401).json({
+        success: false,
+        message: "Restricted page. Only for Instructors",
+      })
+    }
+    const user = await User.findById(id).populate("courses").exec()
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Could not find user",
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: user.courses,
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    })
+  }
+}
+
+exports.getEnrolledCourses = async (req, res) => {
+  try {
+    const { id, accountType } = req.user
+    if (accountType !== ACCOUNT_TYPE.STUDENT) {
+      return res.status(401).json({
+        success: false,
+        message: "Restricted page. Only for Instructors",
+      })
+    }
+    const user = await User.findById(id).populate("courses").exec()
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: `Could not find user with id: ${id}`,
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: user.courses,
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
     })
   }
 }

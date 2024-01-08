@@ -27,6 +27,19 @@ exports.createSubSection = async (req, res) => {
 
     //upload video video to cloudinary
     const cloudVideo = await uploadMedia(video, process.env.FOLDER_NAME)
+    fs.readdir("./tmp", (err, files) => {
+      if (err) console.log(err)
+      else {
+        files.forEach((file) => {
+          fs.unlink(`./tmp/${file}`, (err) => {
+            if (err) {
+              throw err
+            }
+            console.log("Delete File successfully.")
+          })
+        })
+      }
+    })
 
     const duration = Math.floor(cloudVideo.duration)
 
@@ -49,8 +62,16 @@ exports.createSubSection = async (req, res) => {
       },
       { new: true }
     )
-    console.log(updatedSection)
-    const updatedCourse = await Course.findById(courseID)
+
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseID,
+      {
+        $inc: {
+          duration: duration,
+        },
+      },
+      { new: true }
+    )
       .populate({
         path: "content",
         populate: {
@@ -78,7 +99,7 @@ exports.updateSubSection = async (req, res) => {
   try {
     //get data
     const { title, description, sectionID, subSectionID, courseID } = req.body
-    const video = req.files.video
+    const video = req?.files?.video
 
     if (!courseID || !subSectionID || !sectionID) {
       return res.status(400).json({
@@ -86,7 +107,7 @@ exports.updateSubSection = async (req, res) => {
         message: "Course id or subsection id missing.",
       })
     }
-    if (!title || !description || !video) {
+    if (!title && !description && !video) {
       return res.status(400).json({
         success: false,
         message: "No parameters.",
@@ -109,6 +130,19 @@ exports.updateSubSection = async (req, res) => {
       duration = Math.floor(cloudVideo.duration)
       options.videoUrl = cloudVideo.secure_url
       options.timeDuration = duration
+      fs.readdir("./tmp", (err, files) => {
+        if (err) console.log(err)
+        else {
+          files.forEach((file) => {
+            fs.unlink(`./tmp/${file}`, (err) => {
+              if (err) {
+                throw err
+              }
+              console.log("Delete File successfully.")
+            })
+          })
+        }
+      })
     }
 
     //update subsection and get old subsection
@@ -116,7 +150,7 @@ exports.updateSubSection = async (req, res) => {
       subSectionID,
       options
     )
-
+    let updatedCourse
     //if video is uploaded then total time duration will change
     if (video) {
       const updatedSection = await Section.findByIdAndUpdate(
@@ -128,17 +162,35 @@ exports.updateSubSection = async (req, res) => {
         },
         { new: true }
       )
+      updatedCourse = await Course.findByIdAndUpdate(
+        courseID,
+        {
+          $inc: {
+            duration: duration - oldSubSection.timeDuration,
+          },
+        },
+        { new: true }
+      )
+        .populate({
+          path: "content",
+          populate: {
+            path: "subSections",
+          },
+        })
+        .exec()
     }
 
     //getupdated course
-    const updatedCourse = await Course.findById(courseID)
-      .populate({
-        path: "content",
-        populate: {
-          path: "subSections",
-        },
-      })
-      .exec()
+    else {
+      updatedCourse = await Course.findById(courseID)
+        .populate({
+          path: "content",
+          populate: {
+            path: "subSections",
+          },
+        })
+        .exec()
+    }
     return res.status(200).json({
       success: true,
       data: updatedCourse,
@@ -170,7 +222,7 @@ exports.deleteSubSection = async (req, res) => {
 
     const oldSubSection = await SubSection.findByIdAndDelete(subSectionID)
     //🟦🟥🟩🟦🟥🟩 is it necessery to delete SubSection id from the Section => You can leave the document as is, even when the referenced person document is deleted. Mongodb clears references which point to non-existing documents, this doesn't happen immediately after deleting the referenced document. Instead, when you perform action on the document, e.g., update. Moreover, even if you query the database before the references are cleared, the return is empty, instead of null value.
-
+    let updatedCourse
     //decrease timeduration from section
     if (oldSubSection) {
       const updatedSection = await Section.findByIdAndUpdate(
@@ -182,16 +234,34 @@ exports.deleteSubSection = async (req, res) => {
         },
         { new: true }
       )
+      updatedCourse = await Course.findByIdAndUpdate(
+        courseID,
+        {
+          $inc: {
+            duration: -1 * oldSubSection.timeDuration,
+          },
+        },
+        { new: true }
+      )
+        .populate({
+          path: "content",
+          populate: {
+            path: "subSections",
+          },
+        })
+        .exec()
     }
     //return updated course
-    const updatedCourse = await Course.findById(courseID)
-      .populate({
-        path: "content",
-        populate: {
-          path: "subSections",
-        },
-      })
-      .exec()
+    else {
+      updatedCourse = await Course.findById(courseID)
+        .populate({
+          path: "content",
+          populate: {
+            path: "subSections",
+          },
+        })
+        .exec()
+    }
     return res.status(200).json({
       success: true,
       data: updatedCourse,

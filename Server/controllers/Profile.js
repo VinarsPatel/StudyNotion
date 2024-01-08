@@ -5,7 +5,9 @@ const Profile = require("../models/Profile")
 const RatingAndReview = require("../models/RatingAndReview")
 const User = require("../models/User")
 const { uploadMedia } = require("../utils/mediaUploader")
+const { ACCOUNT_TYPE } = require("../utils/constants")
 require("dotenv").config()
+const fs = require("fs")
 
 //profile is initialized with null details at the time of sign up so updation is needed instead od creation
 exports.updateProfile = async (req, res) => {
@@ -13,7 +15,7 @@ exports.updateProfile = async (req, res) => {
     //get data
     const {
       firstName,
-      LastName,
+      lastName,
       profession,
       gender,
       dateOfBirth,
@@ -33,7 +35,7 @@ exports.updateProfile = async (req, res) => {
       { _id: userID },
       {
         firstName: firstName,
-        LastName: LastName,
+        lastName: lastName,
       },
       { new: true }
     )
@@ -133,7 +135,7 @@ exports.getAllUserDetails = async (req, res) => {
 
 exports.updateDisplayPicture = async (req, res) => {
   try {
-    const userId = req.user.id
+    const userID = req.user.id
     const file = req.files.displayPicture
 
     if (!file) {
@@ -145,8 +147,28 @@ exports.updateDisplayPicture = async (req, res) => {
 
     const image = await uploadMedia(file, process.env.FOLDER_NAME, 1000, 1000)
 
+    fs.readdir("./tmp", (err, files) => {
+      if (err) console.log(err)
+      else {
+        files.forEach((file) => {
+          fs.unlink(`./tmp/${file}`, (err) => {
+            if (err) {
+              throw err
+            }
+            console.log("Delete File successfully.")
+          })
+        })
+      }
+    })
+    //  fs.rmdir("./tmp", (err) => {
+    //    if (err) {
+    //      throw err
+    //    }
+    // console.log("Delete File successfully.")
+    //  })
+
     const updatedUser = await User.findByIdAndUpdate(
-      { _id: userId },
+      { _id: userID },
       { image: image.secure_url },
       { new: true }
     )
@@ -154,30 +176,6 @@ exports.updateDisplayPicture = async (req, res) => {
       success: true,
       message: `Image Updated successfully`,
       data: updatedUser,
-    })
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    })
-  }
-}
-
-exports.getEnrolledCourses = async (req, res) => {
-  try {
-    const userId = req.user.id
-    const user = await User.findById(userId).populate("courses").exec()
-
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: `Could not find user with id: ${userId}`,
-      })
-    }
-
-    return res.status(200).json({
-      success: true,
-      data: user.courses,
     })
   } catch (error) {
     return res.status(500).json({

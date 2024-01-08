@@ -19,7 +19,12 @@ const AddCourse = () => {
           <li> ● Standard size for the course thumbnail is 1024x576.</li>
           <li> ● Video section controls the course overview video.</li>
           <li> ● Course Builder is where you create & organize a course.</li>
+          <li> ● The course can be edited.</li>
           <li>
+            {" "}
+            ● The course can be saved as a draft and later can be published.
+          </li>
+          {/* <li>
             {" "}
             ● Add Topics in the Course Builder section to create lessons,
             quizzes, and assignments.
@@ -30,7 +35,7 @@ const AddCourse = () => {
             course single page.
           </li>
           <li> ● Make Announcements to notify any important</li>
-          <li> ● Notes to all enrolled students at once.</li>
+          <li> ● Notes to all enrolled students at once.</li> */}
         </ul>
       </div>
     </div>

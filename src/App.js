@@ -20,6 +20,10 @@ import Cart from "./components/core/Dashboard/Cart"
 import { useSelector } from "react-redux"
 import { ACCOUNT_TYPE } from "./utils/constants"
 import AddCourse from "./components/core/Dashboard/AddCourse"
+import MyCourses from "./components/core/Dashboard/MyCourses"
+import Catalog from "./pages/Catalog"
+import CourseDetails from "./pages/CourseDetails"
+import ViewCourse from "./pages/ViewCourse"
 
 function App() {
   const { user } = useSelector((state) => state.profile)
@@ -73,7 +77,19 @@ function App() {
         {/* <Route path="/loader" element={<OpenRoute><Loader/></OpenRoute>}></Route> */}
         <Route path="/about" element={<AboutUs />}></Route>
         <Route path="/contact" element={<ContactUs />}></Route>
+        <Route path="/catalog/:categoryName" element={<Catalog />}></Route>
+        <Route
+          path="/courses/:courseId"
+          element={
+            <CourseDetails
+              isStudent={user?.accountType === ACCOUNT_TYPE.STUDENT}
+            />
+          }
+        ></Route>
 
+        {user?.accountType === ACCOUNT_TYPE.STUDENT && (
+          <Route path="/view-course/:courseId" element={<ViewCourse />}></Route>
+        )}
         <Route
           element={
             <PrivateRoute>
@@ -83,7 +99,6 @@ function App() {
         >
           <Route path="/dashboard/my-profile" element={<MyProfile />}></Route>
           <Route path="/dashboard/settings" element={<Settings />}></Route>
-
           {user?.accountType === ACCOUNT_TYPE.STUDENT && (
             <>
               <Route
@@ -102,6 +117,10 @@ function App() {
               <Route
                 path="/dashboard/add-course"
                 element={<AddCourse />}
+              ></Route>
+              <Route
+                path="/dashboard/my-courses"
+                element={<MyCourses />}
               ></Route>
             </>
           )}

@@ -1,54 +1,53 @@
 const Course = require("../models/Course")
 const RatingAndReview = require("../models/RatingAndReview")
+const mongoose = require("mongoose")
 
 exports.createRatingAndReview = async (req, res) => {
   try {
-    const { rating, review, courseID } = req.body
+    const { rating, review, courseId } = req.body
     const userID = req.user.id
-    if (!rating || !review || !courseID) {
+    if (!rating || !review || !courseId) {
       return res.status(400).json({
         success: false,
-        message: "Fill both the details.",
+        message: "Add both review and rating.",
       })
     }
 
     //check student is enrolled or not
     const course = await Course.findOne({
-      _id: courseID,
-      studentsEnrolled: { $elemMatch: { $eq: userID } },
+      _id: courseId,
     })
-
-    if (!course) {
+    if (!course.studentsEnrolled.includes(userID)) {
       return res.status(404).json({
         success: false,
-        message: "Student is not enrolled in this course.",
+        message: "You are not enrolled in this course.",
       })
     }
 
     //check student has already rated or not
     const isRated = await RatingAndReview.findOne({
       user: userID,
-      course: courseID,
+      course: courseId,
     })
 
     if (isRated) {
       return res.status(403).json({
         success: false,
-        message: "Student has already rated this course.",
+        message: "You have already rated this course.",
       })
     }
 
     //create
     const RandR = await RatingAndReview.create({
       user: userID,
-      course: courseID,
+      course: courseId,
       rating,
       review,
     })
 
     //add in the course
     const updatedCourse = await Course.findByIdAndUpdate(
-      courseID,
+      courseId,
       {
         $push: {
           ratingAndReview: RandR._id,
@@ -65,16 +64,16 @@ exports.createRatingAndReview = async (req, res) => {
     console.log(error)
     return res.status(500).json({
       success: false,
-      message: "Section creation failed.",
+      message: "Rating/Review failed.",
     })
   }
 }
 
 exports.getAverageRating = async (req, res) => {
   try {
-    const { courseID } = req.body
+    const { courseId } = req.body
 
-    if (!courseID) {
+    if (!courseId) {
       return res.status(400).json({
         success: false,
         message: "course id is missing.",
@@ -84,26 +83,26 @@ exports.getAverageRating = async (req, res) => {
     const result = await RatingAndReview.aggregate([
       {
         $match: {
-          course: new mongoose.Types.ObjectId(courseID),
+          course: new mongoose.Types.ObjectId(courseId),
         },
       },
       {
         $group: {
           _id: null,
           averageRating: { $avg: "$rating" },
+          count: { $sum: 1 },
         },
       },
     ])
-
+    console.log(result)
     //return rating
     if (result.length > 0) {
       return res.status(200).json({
         success: true,
         averageRating: result[0].averageRating,
-        reviewCount: result.length,
+        reviewCount: result[0].count,
       })
     }
-
     return res.status(200).json({
       success: true,
       message: "average rating",
@@ -111,10 +110,9 @@ exports.getAverageRating = async (req, res) => {
       reviewCount: result.length,
     })
   } catch (error) {
-    return res.status(200).json({
-      success: true,
-      message: "Average Rating is 0, no ratings given till now",
-      averageRating: 0,
+    return res.status(500).json({
+      success: false,
+      message: error.message,
     })
   }
 }

@@ -1,22 +1,41 @@
 import React, { useEffect, useState } from "react"
-import { Link, matchPath, useLocation } from "react-router-dom"
+import { Link, matchPath, useLocation, useNavigate } from "react-router-dom"
 import logo from "../../assets/Logo/Logo-Full-Light.png"
 import { NavbarLinks } from "../../data/navbar-links"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { ACCOUNT_TYPE } from "../../utils/constants"
 import ProfileDropDown from "../core/Auth/ProfileDropDown"
 import { PiShoppingCart } from "react-icons/pi"
 import { apiConnector } from "../../services/apiConnector"
 import { categories } from "../../services/apis"
 import { IoIosArrowDropdownCircle } from "react-icons/io"
+import { logout } from "../../services/operations/authAPI"
 
 export const Navbar = () => {
   const location = useLocation()
   const { user } = useSelector((state) => state.profile)
   const { token } = useSelector((state) => state.auth)
   const { totalItems } = useSelector((state) => state.cart)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [subLinks, setSubLinks] = useState([])
-
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]))
+    } catch (e) {
+      return null
+    }
+  }
+  useEffect(() => {
+   console.log("Token Check")
+    if (token) {
+      const decodedJwt = parseJwt(token)
+      console.log(decodedJwt)
+      if (decodedJwt.exp * 1000 < Date.now()) {
+        dispatch(logout(navigate))
+      }
+    }
+  }, [token,dispatch,navigate])
   const matchRoute = (route) => {
     return matchPath({ path: route }, location.pathname)
   }
@@ -24,8 +43,6 @@ export const Navbar = () => {
   const fetchData = async () => {
     try {
       const data = await apiConnector("GET", categories.CATEGORIES_API)
-      console.log(data)
-      console.log(data.data)
       setSubLinks(data.data.data)
     } catch (error) {
       console.log(error)
@@ -52,7 +69,7 @@ export const Navbar = () => {
                       <p>{ele.title}</p>
                       <IoIosArrowDropdownCircle />
 
-                      <div className="invisible absolute left-[50%] top-[0%] flex w-fit translate-x-[-50%] translate-y-[80%] flex-col rounded-md bg-richblack-5 p-4 text-richblack-900 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                      <div className="invisible absolute left-[50%] top-[0%] z-10 flex h-fit w-max translate-x-[-50%] translate-y-[40%] flex-col gap-2 rounded-md bg-richblack-5 p-4 text-richblack-900 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
                         <div
                           className="absolute left-[50%] top-0
                                 h-3
@@ -62,9 +79,10 @@ export const Navbar = () => {
                         {subLinks.length ? (
                           subLinks.map((subLink, index) => (
                             <Link
-                              to={`${subLink.name}`}
+                              to={`catalog/${subLink.name
+                                .replace(" ", "-")
+                                .toLowerCase()}`}
                               key={index}
-                              className="w-fit "
                             >
                               <p>{subLink.name}</p>
                             </Link>

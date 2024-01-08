@@ -113,16 +113,34 @@ exports.deleteSection = async (req, res) => {
     deltedSection?.subSections.map(async (ele) => {
       await SubSection.findByIdAndDelete(ele)
     })
-
-    const updatedCourse = await Course.findById(courseID)
-      .populate({
-        path: "content",
-        populate: {
-          path: "subSections",
+    let updatedCourse
+    if (deltedSection) {
+      updatedCourse = await Course.findByIdAndUpdate(
+        courseID,
+        {
+          $inc: {
+            duration: -1 * deltedSection.totalTimeDuration,
+          },
         },
-      })
-      .exec()
-
+        { new: true }
+      )
+        .populate({
+          path: "content",
+          populate: {
+            path: "subSections",
+          },
+        })
+        .exec()
+    } else {
+      updatedCourse = await Course.findById(courseID)
+        .populate({
+          path: "content",
+          populate: {
+            path: "subSections",
+          },
+        })
+        .exec()
+    }
     return res.status(200).json({
       success: true,
       data: updatedCourse,

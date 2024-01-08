@@ -25,6 +25,7 @@ const EditProfile = () => {
   } = useForm()
 
   const editProfile = (formData) => {
+    console.log(formData)
     dispatch(updateProfile(token, formData))
   }
 

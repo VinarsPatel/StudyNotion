@@ -2,13 +2,12 @@ import { RiEditBoxLine } from "react-icons/ri"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
-import { formattedDate } from "../../../utils/dateFormatter"
+import { formateDate } from "../../../utils/dateFormatter"
 import IconButton from "../../common/IconButton"
 
 export default function MyProfile() {
   const { user } = useSelector((state) => state.profile)
   const navigate = useNavigate()
-
   return (
     <div className="min-w-[320px]">
       <h1 className="mb-14 min-w-[320px] text-3xl font-medium text-richblack-5">
@@ -111,7 +110,7 @@ export default function MyProfile() {
               <p className="mb-2 text-sm text-richblack-600">Date Of Birth</p>
               <p className="text-sm font-medium text-richblack-5">
                 {user?.additionalDetails?.dateOfBirth
-                  ? formattedDate(user?.additionalDetails?.dateOfBirth)
+                  ? formateDate(user?.additionalDetails?.dateOfBirth)
                   : "Add Date Of Birth"}
               </p>
             </div>

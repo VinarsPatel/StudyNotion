@@ -31,7 +31,7 @@ export function sendOtp(email, navigate) {
       navigate("/verify-email")
     } catch (error) {
       console.log("SENDOTP API ERROR............", error)
-      toast.error(error.message)
+      toast.error(error.response.data.message)
     }
     dispatch(setLoading(false))
   }
@@ -84,7 +84,7 @@ export function signUp(
 
 export function login(email, password, navigate) {
   return async (dispatch) => {
-    // const toastId = toast.loading("Loading...")
+    const toastId = toast.loading("Loading...")
     dispatch(setLoading(true))
     try {
       const response = await apiConnector("POST", LOGIN_API, {
@@ -92,7 +92,7 @@ export function login(email, password, navigate) {
         password,
       })
 
-      console.log("LOGIN API RESPONSE............", response)
+      // console.log("LOGIN API RESPONSE............", response)
 
       if (!response.data.success) {
         throw new Error(response.data.message)
@@ -103,8 +103,9 @@ export function login(email, password, navigate) {
       const userImage = response.data?.user?.image
         ? response.data.user.image
         : `https://api.dicebear.com/5.x/initials/svg?seed=${response.data.user.firstName} ${response.data.user.lastName}`
-
-      dispatch(setUser({ ...response.data.user, image: userImage }))
+      response.data.user.image = userImage
+      dispatch(setUser(response.data.user))
+      // dispatch(setUser({ ...response.data.user, image: userImage }))
 
       localStorage.setItem("token", JSON.stringify(response.data.token))
       localStorage.setItem("user", JSON.stringify(response.data.user))
@@ -113,8 +114,8 @@ export function login(email, password, navigate) {
       console.log("LOGIN API ERROR............", error)
       toast.error(error?.data?.message || "Couldn't Login try again")
     }
+    toast.dismiss(toastId)
     dispatch(setLoading(false))
-    //
   }
 }
 
@@ -151,13 +152,13 @@ export function resetPassword(password, confirmPassword, token, navigate) {
         token,
       })
 
-      console.log("RESETPASSWORD RESPONSE............", response)
+      // console.log("RESETPASSWORD RESPONSE............", response)
 
       if (!response.data.success) {
         throw new Error(response.data.message)
       }
 
-      toast.success("Password Reset Successfully")
+      toast.success("Password Reset Successfull")
       navigate("/login")
     } catch (error) {
       console.log("RESETPASSWORD ERROR............", error)

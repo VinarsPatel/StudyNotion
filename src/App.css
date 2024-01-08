@@ -36,9 +36,40 @@ summary::-webkit-details-marker {
   display: none;
 }
 
-summary::after {
-  content: " ►";
+.x > .xsummary::after {
+  content: "︿";
+  font-weight: 900;
+  color: #999daa;
+  padding-bottom: 4px;
 }
-details[open] summary:after {
-  content: " ▼";
+.x[open] .xsummary::after {
+  content: "﹀";
+  font-weight: 900;
+  color: #999daa;
+  padding-top: 8px;
+}
+
+.y > .ysummary::before {
+  content: "︿";
+  font-weight: 900;
+  color: #999daa;
+  padding-bottom: 4px;
+}
+.y[open] .ysummary::before {
+  content: "﹀";
+  font-weight: 900;
+  color: #999daa;
+  padding-top: 8px;
+}
+.z > .zsummary::before {
+  content: "︿";
+  font-weight: 900;
+  color: #999daa;
+  padding-bottom: 4px;
+}
+.z[open] .zsummary::before {
+  content: "﹀";
+  font-weight: 900;
+  color: #999daa;
+  padding-top: 8px;
 }

@@ -16,7 +16,7 @@ const PublishCourse = () => {
   const [loading, setLoading] = useState(false)
   const { token } = useSelector((state) => state.auth)
   const { course } = useSelector((state) => state.course)
-  const { register, handleSubmit } = useForm()
+  const { register, getValues } = useForm()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const goBack = () => {
@@ -37,6 +37,22 @@ const PublishCourse = () => {
     console.log(response)
     if (response?.status === "Published") {
       dispatch(setCourse(null))
+      dispatch(setEditCourse(false))
+      dispatch(setStep(1))
+      navigate("/dashboard/my-courses")
+    }
+    setLoading(false)
+  }
+  const saveAsDraft = async () => {
+    setLoading(true)
+    const formData = new FormData()
+    formData.append("courseID", course._id)
+    formData.append("status", "Draft")
+    const response = await editCourseDetails(formData, token)
+    console.log(response)
+    if (response?.status === "Draft") {
+      dispatch(setCourse(null))
+      dispatch(setEditCourse(false))
       dispatch(setStep(1))
       navigate("/dashboard/my-courses")
     }
@@ -47,10 +63,7 @@ const PublishCourse = () => {
     //  <div
     //    className="flex flex-col gap-[1.62rem] rounded-md border border-richblack-700 bg-richblack-800 p-6 text-richblack-5"
     //  >
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-[1.62rem] rounded-md border border-richblack-700 bg-richblack-800 p-6 text-richblack-5"
-    >
+    <div className="flex flex-col gap-[1.62rem] rounded-md border border-richblack-700 bg-richblack-800 p-6 text-richblack-5">
       <h2 className="text-xl font-semibold text-richblack-5 ">
         Publish Course
       </h2>
@@ -80,7 +93,7 @@ const PublishCourse = () => {
         </button>
         <div className="flex flex-row gap-4">
           <button
-            onClick={() => navigate("/dashboard/my-courses")}
+            onClick={() => saveAsDraft()}
             disabled={loading}
             className={`flex w-fit cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 px-[20px] py-[8px] text-richblack-900`}
           >
@@ -88,15 +101,15 @@ const PublishCourse = () => {
           </button>
           <IconBtn
             text={"Publish Course"}
-            type={"submit"}
             customClasses={"w-fit"}
             disabled={loading}
+            onclick={() => onSubmit(getValues())}
           >
             <VscChevronRight className="text-xl " />
           </IconBtn>
         </div>
       </div>
-    </form>
+    </div>
     //  </div>
   )
 }

@@ -1,9 +1,14 @@
 const express = require("express")
+
 const {
   createCourse,
   updateCourse,
+  //   deleteCourse,
   getAllCourses,
+  getFullCourseDetails,
   getCourseDetails,
+  getEnrolledCourses,
+  getInstructorCourses,
 } = require("../controllers/Course")
 const {
   createSection,
@@ -60,6 +65,7 @@ router.post("/addSubSection", auth, isInstructor, createSubSection)
 // Get all Registered Courses
 router.get("/getAllCourses", getAllCourses)
 // Get Details for a Specific Courses
+router.post("/getFullCourseDetails", getFullCourseDetails)
 router.post("/getCourseDetails", getCourseDetails)
 
 // ********************************************************************************************************
@@ -77,5 +83,8 @@ router.post("/getCategoryPageDetails", categoryPageDetails)
 router.post("/createRating", auth, isStudent, createRatingAndReview)
 router.get("/getAverageRating", getAverageRating)
 router.get("/getReviews", getAllRatingAndReview)
+
+router.get("/getEnrolledCourses", auth, isStudent, getEnrolledCourses)
+router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
 
 module.exports = router

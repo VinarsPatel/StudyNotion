@@ -1,4 +1,5 @@
 const Category = require("../models/Category")
+const mongoose = require("mongoose")
 
 exports.createCategory = async (req, res) => {
   try {
@@ -46,13 +47,16 @@ exports.showAllCategories = async (req, res) => {
 exports.categoryPageDetails = async (req, res) => {
   try {
     const { categoryId } = req.body
-
     // Get courses for the specified category
+    //  const selectedCategory = await Category.findById(categoryId)
+    //  .populate({
+    //    path: "courses",
+    //    populate: {
+    //      path: "ratingAndReview",
+    //    },
+    //  })
+    //  .exec()
     const selectedCategory = await Category.findById(categoryId)
-      .populate("courses")
-      .exec()
-    console.log(selectedCategory)
-
     // Handle the case when the category is not found
     if (!selectedCategory) {
       console.log("Category not found.")
@@ -70,22 +74,54 @@ exports.categoryPageDetails = async (req, res) => {
       })
     }
 
-    const selectedCourses = selectedCategory.courses
+    //  // Get courses for other categories
+    //  const categoriesExceptSelected = await Category.find({
+    //    _id: { $ne: categoryId },
+    //  })
+    //    //.populate("courses");
+    //    .populate({
+    //      path: "courses",
+    //      populate: {
+    //        path: "ratingAndReview",
+    //      },
+    //    })
+    //    .exec()
 
-    // Get courses for other categories
-    const categoriesExceptSelected = await Category.find({
-      _id: { $ne: categoryId },
-    }).populate("courses")
+    //  let differentCourses = []
 
-    let differentCourses = []
-
-    for (const category of categoriesExceptSelected) {
-      differentCourses.push(...category.courses)
-    }
+    //  for (const category of categoriesExceptSelected) {
+    //    differentCourses.push(...category.courses)
+    //  }
 
     // Get top-selling courses across all categories
-    const allCategories = await Category.find().populate("courses")
-    const allCourses = allCategories.flatMap((category) => category.courses)
+    const allCategories = await Category.find()
+      .populate({
+        path: "courses",
+        populate: {
+          path: "ratingAndReview",
+        },
+      })
+      .lean()
+      .exec()
+
+    let allCourses = allCategories.flatMap((category) => category.courses)
+    let selectedCourses = [],
+      differentCourses = []
+
+    allCourses.forEach((course) => {
+      let avg = 0
+      course.ratingAndReview.forEach((ele) => {
+        avg += ele.rating
+      })
+      course["avgRating"] =
+        course.ratingAndReview.length === 0
+          ? 0
+          : avg / course.ratingAndReview.length
+
+      if (course.category == categoryId) selectedCourses.push(course)
+      else differentCourses.push(course)
+    })
+
     const mostSellingCourses = allCourses
 
       //need to be checked 🟥🟩🟥🟩
@@ -93,6 +129,7 @@ exports.categoryPageDetails = async (req, res) => {
       .slice(0, 10)
 
     res.status(200).json({
+      success: true,
       selectedCourses: selectedCourses,
       differentCourses: differentCourses,
       mostSellingCourses: mostSellingCourses,
@@ -100,8 +137,7 @@ exports.categoryPageDetails = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "error in categoryPageDetails",
-      error: error.message,
+      message: error.message,
     })
   }
 }

@@ -238,7 +238,7 @@ const CourseInformationForm = () => {
           {...register("courseCategory", { required: true })}
           className="inputStyle w-full"
         >
-          <option value={""} disabled className="text-richblac ">
+          <option value={""} disabled>
             Choose Course Category
           </option>
           {categories !== null &&
