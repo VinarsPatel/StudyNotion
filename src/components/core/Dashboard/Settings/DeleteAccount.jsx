@@ -8,6 +8,7 @@ const DeleteAccount = () => {
   const { token } = useSelector((state) => state.auth)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const { loading } = useSelector((state) => state.profile)
 
   const deleteAccount = () => {
     dispatch(deleteProfile(token, navigate))
@@ -27,12 +28,13 @@ const DeleteAccount = () => {
             remove all the contain associated with it.
           </p>
         </div>
-        <p
-          className="cursor-pointer text-base font-medium italic text-pink-300"
+        <button
+          className="w-fit cursor-pointer text-base font-medium italic text-pink-300"
           onClick={deleteAccount}
+          disabled={loading}
         >
           I want to delete my account.
-        </p>
+        </button>
       </div>
     </div>
   )

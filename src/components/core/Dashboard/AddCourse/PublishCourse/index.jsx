@@ -34,7 +34,7 @@ const PublishCourse = () => {
     formData.append("courseID", course._id)
     formData.append("status", "Published")
     const response = await editCourseDetails(formData, token)
-    console.log(response)
+    //console.log(response)
     if (response?.status === "Published") {
       dispatch(setCourse(null))
       dispatch(setEditCourse(false))
@@ -49,7 +49,7 @@ const PublishCourse = () => {
     formData.append("courseID", course._id)
     formData.append("status", "Draft")
     const response = await editCourseDetails(formData, token)
-    console.log(response)
+    //console.log(response)
     if (response?.status === "Draft") {
       dispatch(setCourse(null))
       dispatch(setEditCourse(false))

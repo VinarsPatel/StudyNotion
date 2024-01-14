@@ -8,9 +8,9 @@ exports.dbConnect = async () => {
       useUnifiedTopology: true,
     })
 
-    console.log("DB connection successfull.")
+    //console.log("DB connection successfull.")
   } catch (error) {
-    console.log("DB connection failed.")
+    //console.log("DB connection failed.")
     console.error(error)
     process.exit(1)
   }

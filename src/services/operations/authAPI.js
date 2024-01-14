@@ -16,13 +16,14 @@ const {
 
 export function sendOtp(email, navigate) {
   return async (dispatch) => {
+    const toastId = toast.loading("Loading...")
     dispatch(setLoading(true))
     try {
       const response = await apiConnector("POST", SENDOTP_API, {
         email,
         checkUserPresent: true,
       })
-      console.log("SENDOTP API RESPONSE............", response)
+      //console.log("SENDOTP API RESPONSE............", response)
 
       if (!response.data.success) {
         throw new Error(response.data.message)
@@ -30,10 +31,11 @@ export function sendOtp(email, navigate) {
       toast.success("OTP Sent Successfully")
       navigate("/verify-email")
     } catch (error) {
-      console.log("SENDOTP API ERROR............", error)
+      //console.log("SENDOTP API ERROR............", error)
       toast.error(error.response.data.message)
     }
     dispatch(setLoading(false))
+    toast.dismiss(toastId)
   }
 }
 
@@ -48,7 +50,7 @@ export function signUp(
   navigate
 ) {
   return async (dispatch) => {
-    // const toastId = toast.loading("Loading...")
+    const toastId = toast.loading("Loading...")
     dispatch(setLoading(true))
     try {
       const response = await apiConnector("POST", SIGNUP_API, {
@@ -71,14 +73,15 @@ export function signUp(
       navigate("/login")
     } catch (error) {
       toast.error(error.response.data.message)
-      console.log(error.response.data.invalidOtp !== true)
-      console.log(typeof error.response.data.invalidOtp)
-      console.log(typeof true)
+      //console.log(error.response.data.invalidOtp !== true)
+      //console.log(typeof error.response.data.invalidOtp)
+      //console.log(typeof true)
       if (error.response.data.invalidOtp !== true) {
         navigate("/signup")
       }
     }
     dispatch(setLoading(false))
+    toast.dismiss(toastId)
   }
 }
 
@@ -111,7 +114,7 @@ export function login(email, password, navigate) {
       localStorage.setItem("user", JSON.stringify(response.data.user))
       navigate("/dashboard/my-profile")
     } catch (error) {
-      console.log("LOGIN API ERROR............", error)
+      //console.log("LOGIN API ERROR............", error)
       toast.error(error?.data?.message || "Couldn't Login try again")
     }
     toast.dismiss(toastId)
@@ -144,6 +147,7 @@ export function getPasswordResetToken(email, setEmailSent) {
 
 export function resetPassword(password, confirmPassword, token, navigate) {
   return async (dispatch) => {
+    const toastId = toast.loading("Loading...")
     dispatch(setLoading(true))
     try {
       const response = await apiConnector("POST", RESETPASSWORD_API, {
@@ -161,10 +165,11 @@ export function resetPassword(password, confirmPassword, token, navigate) {
       toast.success("Password Reset Successfull")
       navigate("/login")
     } catch (error) {
-      console.log("RESETPASSWORD ERROR............", error)
+      //console.log("RESETPASSWORD ERROR............", error)
       toast.error(error.data.message)
     }
     dispatch(setLoading(false))
+    toast.dismiss(toastId)
   }
 }
 

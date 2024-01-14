@@ -1,8 +1,10 @@
 const Course = require("../models/Course")
 const Section = require("../models/Section")
 const SubSection = require("../models/SubSection")
+const { destroyMedia } = require("../utils/mediaDestroyer")
 const { uploadMedia } = require("../utils/mediaUploader")
 require("dotenv").config()
+const fs = require("fs")
 
 exports.createSubSection = async (req, res) => {
   try {
@@ -35,7 +37,7 @@ exports.createSubSection = async (req, res) => {
             if (err) {
               throw err
             }
-            console.log("Delete File successfully.")
+            //console.log("Delete File successfully.")
           })
         })
       }
@@ -86,7 +88,7 @@ exports.createSubSection = async (req, res) => {
       data: updatedCourse,
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "SubSection creation failed.",
@@ -138,7 +140,7 @@ exports.updateSubSection = async (req, res) => {
               if (err) {
                 throw err
               }
-              console.log("Delete File successfully.")
+              //console.log("Delete File successfully.")
             })
           })
         }
@@ -153,6 +155,8 @@ exports.updateSubSection = async (req, res) => {
     let updatedCourse
     //if video is uploaded then total time duration will change
     if (video) {
+      if (oldSubSection?.videoUrl.length > 4)
+        await destroyMedia(oldSubSection.videoUrl)
       const updatedSection = await Section.findByIdAndUpdate(
         sectionID,
         {
@@ -180,7 +184,7 @@ exports.updateSubSection = async (req, res) => {
         .exec()
     }
 
-    //getupdated course
+    //get updated course
     else {
       updatedCourse = await Course.findById(courseID)
         .populate({
@@ -197,7 +201,7 @@ exports.updateSubSection = async (req, res) => {
       message: "SubSection updated Succesfully.",
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "SubSection updation failed.",
@@ -222,6 +226,10 @@ exports.deleteSubSection = async (req, res) => {
 
     const oldSubSection = await SubSection.findByIdAndDelete(subSectionID)
     //🟦🟥🟩🟦🟥🟩 is it necessery to delete SubSection id from the Section => You can leave the document as is, even when the referenced person document is deleted. Mongodb clears references which point to non-existing documents, this doesn't happen immediately after deleting the referenced document. Instead, when you perform action on the document, e.g., update. Moreover, even if you query the database before the references are cleared, the return is empty, instead of null value.
+
+    if (oldSubSection?.videoUrl.length > 4) {
+      await destroyMedia(oldSubSection.videoUrl)
+    }
     let updatedCourse
     //decrease timeduration from section
     if (oldSubSection) {
@@ -268,7 +276,7 @@ exports.deleteSubSection = async (req, res) => {
       message: "SUbSection deleted Succesfully.",
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "SUbSection delation failed.",

@@ -3,11 +3,15 @@ const Category = require("../models/Category")
 const { uploadMedia } = require("../utils/mediaUploader")
 const User = require("../models/User")
 const { ACCOUNT_TYPE } = require("../utils/constants")
+const Section = require("../models/Section")
+const SubSection = require("../models/SubSection")
+const RatingAndReview = require("../models/RatingAndReview")
+const { destroyMedia } = require("../utils/mediaDestroyer")
+const fs = require("fs")
 
 exports.createCourse = async (req, res) => {
   try {
     //get data
-    //  console.log(req);
     let {
       courseName,
       description,
@@ -60,7 +64,7 @@ exports.createCourse = async (req, res) => {
             if (err) {
               throw err
             }
-            console.log("Delete File successfully.")
+            //console.log("Delete File successfully.")
           })
         })
       }
@@ -113,7 +117,7 @@ exports.createCourse = async (req, res) => {
       data: newCourse,
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "Course creation failed.",
@@ -144,7 +148,7 @@ exports.getAllCourses = async (req, res) => {
       data: allCourses,
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "Failed to get all courses.",
@@ -188,6 +192,7 @@ exports.getFullCourseDetails = async (req, res) => {
     })
   }
 }
+
 exports.getCourseDetails = async (req, res) => {
   try {
     const { courseID } = req.body
@@ -289,6 +294,7 @@ exports.updateCourse = async (req, res) => {
     }
 
     if (thumbnail != null) {
+      await destroyMedia(course.thumbnail)
       var thumbnailImg = await uploadMedia(thumbnail, process.env.FOLDER_NAME)
       fs.readdir("./tmp", (err, files) => {
         if (err) console.log(err)
@@ -298,7 +304,7 @@ exports.updateCourse = async (req, res) => {
               if (err) {
                 throw err
               }
-              console.log("Delete File successfully.")
+              //console.log("Delete File successfully.")
             })
           })
         }
@@ -326,10 +332,58 @@ exports.updateCourse = async (req, res) => {
       data: updatedCourse,
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "Course updation failed.",
+      error: error.message,
+    })
+  }
+}
+
+exports.deleteCourse = async (req, res) => {
+  try {
+    //get data
+    let { courseID } = req.body
+    const userId = req.user.id
+    if (!courseID) {
+      return res.status(404).json({
+        success: false,
+        message: "Add course Id.",
+      })
+    }
+
+    const course = await Course.findByIdAndDelete(courseID)
+    if (userId !== course.instructor.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "You can't delete this course.",
+      })
+    }
+    await destroyMedia(course.thumbnail)
+    for (let sectionId of course.content) {
+      let section = await Section.findByIdAndDelete(sectionId)
+      if (!section) continue
+      for (let subSecId of section.subSections) {
+        const subSec = await SubSection.findByIdAndDelete(subSecId)
+        if (subSec?.videoUrl.length > 4) {
+          await destroyMedia(subSec.videoUrl)
+        }
+      }
+    }
+    for (let ratingId of course.ratingAndReview) {
+      await RatingAndReview.findByIdAndDelete(ratingId)
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Course deleted Succesfully.",
+    })
+  } catch (error) {
+    //console.log(error)
+    return res.status(500).json({
+      success: false,
+      message: "Course deletion failed.",
       error: error.message,
     })
   }
@@ -374,7 +428,10 @@ exports.getEnrolledCourses = async (req, res) => {
         message: "Restricted page. Only for Instructors",
       })
     }
-    const user = await User.findById(id).populate("courses").exec()
+    const user = await User.findById(id)
+      .populate("courses")
+      .populate("courseProgress")
+      .exec()
 
     if (!user) {
       return res.status(400).json({
@@ -385,7 +442,8 @@ exports.getEnrolledCourses = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      data: user.courses,
+      courses: user.courses,
+      courseProgress: user.courseProgress,
     })
   } catch (error) {
     return res.status(500).json({

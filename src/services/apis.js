@@ -49,6 +49,10 @@ export const ratingsEndpoints = {
   REVIEWS_DETAILS_API: BASE_URL + "/course/getReviews",
   GET_AVERAGE_RATING_API: BASE_URL + "/getAverageRating",
 }
+export const courseProgressEndpoints = {
+  UPDATE_SUBSECTION__STATUS_API: BASE_URL + "/course/updateSubSecStatus",
+  GET_COURSE_PROGRESS_API: BASE_URL + "/course/getCourseProgress",
+}
 
 // CATAGORIES API
 export const categories = {

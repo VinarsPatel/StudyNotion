@@ -19,6 +19,7 @@ export const getCategoryData = async function (categoryId) {
   } catch (error) {
     console.error(error)
     toast.error(error.response.data.message)
+    result = {}
   }
   return result
 }

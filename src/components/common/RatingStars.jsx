@@ -9,7 +9,7 @@ function RatingStars({ Rating, Star_Size }) {
   const [starCount, SetStarCount] = useState({
     full: 0,
     half: 0,
-    empty: 0, 
+    empty: 0,
   })
 
   useEffect(() => {

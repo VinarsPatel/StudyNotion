@@ -40,9 +40,9 @@ const cartSlice = createSlice({
     },
     removeFromCart: (state, action) => {
       const courseId = action.payload
-      console.log(courseId)
+      //console.log(courseId)
       const index = state.cart.findIndex((item) => item._id === courseId)
-      console.log(index)
+      //console.log(index)
       if (index >= 0) {
         // If the course is found in the cart, remove it
         state.totalItems--

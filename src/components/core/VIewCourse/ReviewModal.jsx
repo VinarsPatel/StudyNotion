@@ -13,7 +13,7 @@ const ReviewModal = ({ modalData }) => {
   const { courseId } = useParams()
   const onSubmitHandler = (currentValues) => {
     setLoading(true)
-    console.log({ ...currentValues, rating, courseId })
+    //console.log({ ...currentValues, rating, courseId })
     const success = createRating(token, { ...currentValues, rating, courseId })
     if (success) modalData.btn2Handler()
     setLoading(false)
@@ -43,7 +43,6 @@ const ReviewModal = ({ modalData }) => {
             spacing="8px"
             activeColor="rgb(255 214 10 / var(--tw-bg-opacity)"
             onChange={(newRating) => {
-              //   console.log(newRating)
               setRating(newRating)
             }}
           />
@@ -59,19 +58,14 @@ const ReviewModal = ({ modalData }) => {
             {...register("review", { required: true })}
             className="inputStyle min-h-[140px] w-full"
           />
-          {errors.lectureDescription && (
+          {errors.review && (
             <span className="mt-2 text-[12px] text-yellow-100">
               This field is required.
             </span>
           )}
         </div>
         <div className="flex items-center gap-x-4">
-          <IconBtn
-            type={"submit"}
-            onclick={modalData?.btn1Handler}
-            text={"Add Review"}
-            disabled={loading}
-          />
+          <IconBtn type={"submit"} text={"Add Review"} disabled={loading} />
           <button
             className="cursor-pointer rounded-md bg-richblack-200 px-[20px] py-[8px] text-richblack-900"
             onClick={modalData?.btn2Handler}

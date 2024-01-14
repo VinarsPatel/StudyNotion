@@ -13,7 +13,7 @@ exports.createCategory = async (req, res) => {
       name: name,
       description: description,
     })
-    console.log(CategorysDetails)
+    //console.log(CategorysDetails)
     return res.status(200).json({
       success: true,
       message: "Categorys Created Successfully",
@@ -59,7 +59,7 @@ exports.categoryPageDetails = async (req, res) => {
     const selectedCategory = await Category.findById(categoryId)
     // Handle the case when the category is not found
     if (!selectedCategory) {
-      console.log("Category not found.")
+      //console.log("Category not found.")
       return res
         .status(404)
         .json({ success: false, message: "Category not found" })
@@ -67,9 +67,10 @@ exports.categoryPageDetails = async (req, res) => {
 
     // Handle the case when there are no courses
     if (selectedCategory.courses.length === 0) {
-      console.log("No courses found for the selected category.")
+      //console.log("No courses found for the selected category.")
       return res.status(404).json({
         success: false,
+        data: {},
         message: "No courses found for the selected category.",
       })
     }
@@ -104,7 +105,11 @@ exports.categoryPageDetails = async (req, res) => {
       .lean()
       .exec()
 
-    let allCourses = allCategories.flatMap((category) => category.courses)
+    let allCoursesRes = allCategories.flatMap((category) => category.courses)
+    let allCourses = []
+    for (let course of allCoursesRes) {
+      if (course.status === "Published") allCourses.push(course)
+    }
     let selectedCourses = [],
       differentCourses = []
 

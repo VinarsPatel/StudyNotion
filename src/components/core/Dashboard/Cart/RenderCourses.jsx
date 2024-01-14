@@ -7,7 +7,6 @@ import { removeFromCart } from "../../../../slices/cartSlice"
 const RenderCourses = () => {
   const { cart, totalItems } = useSelector((state) => state.cart)
   const dispatch = useDispatch()
-  //   useEffect(() => console.log(cart), [])
 
   const handleRemoveCourse = (courseId) => {
     dispatch(removeFromCart(courseId))

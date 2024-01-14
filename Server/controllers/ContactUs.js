@@ -7,7 +7,7 @@ require("dotenv").config()
 
 exports.contactUsController = async (req, res) => {
   const { email, firstName, lastName, message, phoneNo, countryCode } = req.body
-  console.log(req.body)
+  //console.log(req.body)
   try {
     await mailSender(
       process.env.INFO_MAIL,
@@ -41,7 +41,7 @@ exports.contactUsController = async (req, res) => {
     })
   } catch (error) {
     console.error("Error", error)
-    console.log("Error message :", error.message)
+    //console.log("Error message :", error.message)
     return res.json({
       success: false,
       message: "Something went wrong...",

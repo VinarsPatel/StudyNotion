@@ -27,15 +27,15 @@ export const Navbar = () => {
     }
   }
   useEffect(() => {
-   console.log("Token Check")
+    //console.log("Token Check")
     if (token) {
       const decodedJwt = parseJwt(token)
-      console.log(decodedJwt)
+      //console.log(decodedJwt)
       if (decodedJwt.exp * 1000 < Date.now()) {
         dispatch(logout(navigate))
       }
     }
-  }, [token,dispatch,navigate])
+  }, [token, dispatch, navigate])
   const matchRoute = (route) => {
     return matchPath({ path: route }, location.pathname)
   }
@@ -45,7 +45,7 @@ export const Navbar = () => {
       const data = await apiConnector("GET", categories.CATEGORIES_API)
       setSubLinks(data.data.data)
     } catch (error) {
-      console.log(error)
+      //console.log(error)
     }
   }
 

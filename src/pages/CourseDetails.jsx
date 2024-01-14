@@ -14,6 +14,7 @@ import {
 import { MdOndemandVideo } from "react-icons/md"
 import IconBtn from "../components/common/IconButton"
 import { addToCart } from "../slices/cartSlice"
+import ReviewSlider from "../components/common/ReviewSlider"
 
 const CourseDetails = ({ isStudent }) => {
   const { courseId } = useParams()
@@ -37,7 +38,7 @@ const CourseDetails = ({ isStudent }) => {
     const fetchCourseDetails = async () => {
       const courseS = await getFullDetailsOfCourse(courseId)
       if (!courseS) return
-      console.log(courseS)
+      //console.log(courseS)
       let avgRating = 0
       for (const rat of courseS.ratingAndReview) {
         avgRating += rat.rating
@@ -51,6 +52,8 @@ const CourseDetails = ({ isStudent }) => {
 
     fetchCourseDetails()
   }, [courseId])
+
+  //console.log(course)
   return !course ? (
     <Loader />
   ) : (
@@ -199,6 +202,12 @@ const CourseDetails = ({ isStudent }) => {
             {course.instructor.firstName} {course.instructor.lastName}
           </p>
         </div>
+      </div>
+      <div className="px-12 py-5 lg:px-28">
+        <p className="text-2xl font-medium text-richblack-5 ">
+          Reviews from other learners
+        </p>
+        <ReviewSlider reviews={course?.ratingAndReview} />
       </div>
     </>
   )

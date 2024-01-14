@@ -8,6 +8,7 @@ const { uploadMedia } = require("../utils/mediaUploader")
 const { ACCOUNT_TYPE } = require("../utils/constants")
 require("dotenv").config()
 const fs = require("fs")
+const { destroyMedia } = require("../utils/mediaDestroyer")
 
 //profile is initialized with null details at the time of sign up so updation is needed instead od creation
 exports.updateProfile = async (req, res) => {
@@ -64,7 +65,7 @@ exports.updateProfile = async (req, res) => {
       message: "Profile details updated Succesfully.",
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "Profile details updation failed.",
@@ -105,7 +106,7 @@ exports.deleteAccount = async (req, res) => {
       message: "Account deleted Succesfully.",
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "Account deletion failed.",
@@ -119,7 +120,7 @@ exports.getAllUserDetails = async (req, res) => {
     const userDetails = await User.findById(id)
       .populate("additionalDetails")
       .exec()
-    console.log(userDetails)
+    //console.log(userDetails)
     res.status(200).json({
       success: true,
       message: "User Data fetched successfully",
@@ -144,9 +145,15 @@ exports.updateDisplayPicture = async (req, res) => {
         message: "File missing.",
       })
     }
-
+    const oldeUser = await User.findById(userID)
+    if (!oldeUser) {
+      return res.status(400).json({
+        success: false,
+        message: "User does not exist.",
+      })
+    }
     const image = await uploadMedia(file, process.env.FOLDER_NAME, 1000, 1000)
-
+    //  console.log(image)
     fs.readdir("./tmp", (err, files) => {
       if (err) console.log(err)
       else {
@@ -155,17 +162,22 @@ exports.updateDisplayPicture = async (req, res) => {
             if (err) {
               throw err
             }
-            console.log("Delete File successfully.")
+            //console.log("Delete File successfully.")
           })
         })
       }
     })
-    //  fs.rmdir("./tmp", (err) => {
-    //    if (err) {
-    //      throw err
-    //    }
-    // console.log("Delete File successfully.")
-    //  })
+
+    if (oldeUser?.image.length > 4) {
+      const destroyRes = await destroyMedia(oldeUser.image)
+      // console.log(destroyRes)
+    }
+    //   fs.rmdir("./tmp", (err) => {
+    //     if (err) {
+    //       throw err
+    //     }
+    //  console.log("Delete File successfully.")
+    //   })
 
     const updatedUser = await User.findByIdAndUpdate(
       { _id: userID },

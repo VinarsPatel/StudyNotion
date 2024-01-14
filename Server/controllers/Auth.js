@@ -165,7 +165,7 @@ exports.signUp = async (req, res) => {
       about: null,
       contactNumber: null,
     })
-    console.log(profileDetails._id)
+    //console.log(profileDetails._id)
     const user = await User.create({
       firstName,
       lastName,
@@ -186,7 +186,7 @@ exports.signUp = async (req, res) => {
       user,
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "User cannot be registrered. Please try again",
@@ -257,7 +257,7 @@ exports.logIn = async (req, res) => {
       })
     }
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "Login Failed, Try again.",
@@ -317,7 +317,7 @@ exports.changePassword = async (req, res) => {
             `${updatedUser.firstName} ${updatedUser.lastName}`
           )
         )
-        console.log("Email sent successfully:", emailResponse.response)
+        //console.log("Email sent successfully:", emailResponse.response)
       } catch (error) {
         // If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
         console.error("Error occurred while sending email:", error)
@@ -344,7 +344,7 @@ exports.changePassword = async (req, res) => {
       })
     }
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "Failed to change password.",

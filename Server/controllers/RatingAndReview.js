@@ -61,7 +61,7 @@ exports.createRatingAndReview = async (req, res) => {
       data: RandR,
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "Rating/Review failed.",
@@ -94,7 +94,7 @@ exports.getAverageRating = async (req, res) => {
         },
       },
     ])
-    console.log(result)
+    //console.log(result)
     //return rating
     if (result.length > 0) {
       return res.status(200).json({
@@ -119,28 +119,28 @@ exports.getAverageRating = async (req, res) => {
 
 exports.getAllRatingAndReview = async (req, res) => {
   try {
-    const allRatingAndReviews = RatingAndReview.find({})
+    const allReviews = await RatingAndReview.find({})
       .sort({ rating: "desc" })
       .populate({
         path: "user",
-        select: "firstName lastname email image ",
+        select: "firstName lastName email image", // Specify the fields you want to populate from the "Profile" model
       })
       .populate({
         path: "course",
-        select: "courseName",
+        select: "courseName", //Specify the fields you want to populate from the "Course" model
       })
       .exec()
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
-      message: "All Rating And Review.",
-      data: allRatingAndReviews,
+      data: allReviews,
     })
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).json({
       success: false,
-      message: "Failed to get all Rating And Review.",
+      message: "Failed to retrieve the rating and review for the course",
+      error: error.message,
     })
   }
 }

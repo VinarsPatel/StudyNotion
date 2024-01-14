@@ -30,13 +30,13 @@ export async function buyCourse(
   const toastId = toast.loading("Loading...")
   try {
     const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js")
-    console.log("Script Loaded")
+    //console.log("Script Loaded")
     if (!res) {
       toast.error("Failed to load RazorPay SDK.")
       toast.dismiss(toastId)
       return
     }
-    console.log(studentEndpoints.COURSE_PAYMENT_API)
+    //console.log(studentEndpoints.COURSE_PAYMENT_API)
     //Initiate order
     const orderResponse = await apiConnector(
       "POST",
@@ -56,8 +56,8 @@ export async function buyCourse(
       toast.error(orderResponse.data.message)
       return
     }
-    console.log(process.env.RAZORPAY_KEY)
-    console.log(orderResponse)
+    //console.log(process.env.RAZORPAY_KEY)
+    //console.log(orderResponse)
     const options = {
       key: process.env.RAZORPAY_KEY,
       currency: orderResponse.data.paymentResponse.currency,
@@ -71,7 +71,7 @@ export async function buyCourse(
         email: userDetails.email,
       },
       handler: function (response) {
-        console.log("Call Back")
+        //console.log("Call Back")
         //send successful wala mail
         sendPaymentSuccessEmail(
           response,
@@ -94,10 +94,10 @@ export async function buyCourse(
     paymentObject.open()
     paymentObject.on("payment.failed", function (response) {
       toast.error("oops, payment failed")
-      console.log(response.error)
+      //console.log(response.error)
     })
   } catch (error) {
-    console.log("PAYMENT API ERROR.....", error)
+    //console.log("PAYMENT API ERROR.....", error)
     toast.error(error.response.data.message)
   }
   toast.dismiss(toastId)
@@ -121,11 +121,11 @@ async function verifyPayment(bodyData, token, navigate, dispatch, isDirect) {
     if (!response.data.success) {
       throw new Error(response.data.message)
     }
-    toast.success("payment Successful, you are addded to the course")
+    toast.success("Payment successfull, you are addded to the course.")
     navigate("/dashboard/enrolled-courses")
     if (!isDirect) dispatch(resetCart())
   } catch (error) {
-    console.log("PAYMENT VERIFY ERROR....", error)
+    //console.log("PAYMENT VERIFY ERROR....", error)
     toast.error("Could not verify Payment")
   }
   toast.dismiss(toastId)
@@ -148,7 +148,7 @@ async function sendPaymentSuccessEmail(response, amount, token, userName) {
       }
     )
   } catch (error) {
-    console.log("PAYMENT SUCCESS EMAIL ERROR....", error)
+    //console.log("PAYMENT SUCCESS EMAIL ERROR....", error)
   }
 }
 
@@ -169,7 +169,6 @@ export async function createRating(token, body) {
     }
     toast.success("Rating and review added successfully.")
   } catch (error) {
-    console.log("", error)
     toast.error(error?.response?.data?.message)
   }
   toast.dismiss(toastId)

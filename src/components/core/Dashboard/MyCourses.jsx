@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
-  //   deleteCourse,
+  deleteCourse,
   fetchInstructorCourses,
   getDetailsOfCourse,
 } from "../../../services/operations/courseDetailsAPI"
 import IconBtn from "../../common/IconButton"
 import { VscAdd } from "react-icons/vsc"
 import { BsCheckCircleFill, BsClockFill } from "react-icons/bs"
-// import { RiDeleteBin6Fill } from "react-icons/ri"
+import { RiDeleteBin6Fill } from "react-icons/ri"
 import { MdEdit } from "react-icons/md"
 import { useNavigate } from "react-router-dom"
 import { setCourse, setEditCourse } from "../../../slices/courseSlice"
 import { convertSecondstoTime } from "../../../utils/timeDurationFormatter"
 import { Loader } from "../../common/Loader"
+import toast from "react-hot-toast"
 
 const MyCourses = () => {
   const navigate = useNavigate()
@@ -23,19 +24,23 @@ const MyCourses = () => {
   const [courses, setCourses] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  //   const deleteCourseHandler = async (courseID) => {
-  //     setLoading(true)
-  //     try {
-  //       await deleteCourse({ courseID }, token)
-  //       const courseRes = await fetchInstructorCourses(token)
-  //       setCourses(courseRes)
-  //     } catch (error) {}
-  //     setLoading(false)
-  //   }
-  const editCourseHandler = async (courseID) => {
+  const deleteCourseHandler = async (courseID) => {
+    setLoading(true)
+    try {
+      await deleteCourse({ courseID }, token)
+      const courseRes = await fetchInstructorCourses(token)
+      setCourses(courseRes)
+    } catch (error) {}
+    setLoading(false)
+  }
+  const editCourseHandler = async (courseID, courseStatus) => {
+    if (courseStatus === "Published") {
+      toast.error("You cannot edit published course.")
+      return
+    }
     setLoading(true)
     const course = await getDetailsOfCourse(courseID, token)
-    console.log(course)
+    //console.log(course)
     dispatch(setEditCourse(true))
     dispatch(setCourse(course))
     navigate("/dashboard/add-course")
@@ -134,18 +139,19 @@ const MyCourses = () => {
                         <button
                           disabled={loading}
                           onClick={() => {
-                            editCourseHandler(course._id)
+                            editCourseHandler(course._id, course.status)
                           }}
                         >
                           <MdEdit className="text-xl " />
                         </button>
-                        {/* <button
-                        disabled={loading}
-                        onClick={() => {
-                          deleteCourseHandler(course._id)
-                        }}>
-                        <RiDeleteBin6Fill className="text-xl " />
-                      </button> */}
+                        <button
+                          disabled={loading}
+                          onClick={() => {
+                            deleteCourseHandler(course._id)
+                          }}
+                        >
+                          <RiDeleteBin6Fill className="text-xl " />
+                        </button>
                       </div>
                     </td>
                   </tr>

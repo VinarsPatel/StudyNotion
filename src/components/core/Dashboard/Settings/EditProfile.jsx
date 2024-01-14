@@ -15,9 +15,8 @@ const EditProfile = () => {
   const { token } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { loading } = useSelector((state) => state.profile)
 
-  console.log(new Date().toISOString())
-  console.log(user)
   const {
     register,
     handleSubmit,
@@ -25,7 +24,7 @@ const EditProfile = () => {
   } = useForm()
 
   const editProfile = (formData) => {
-    console.log(formData)
+    //console.log(formData)
     dispatch(updateProfile(token, formData))
   }
 
@@ -225,6 +224,7 @@ const EditProfile = () => {
           onClick={() => {
             navigate("/dashboard/my-profile")
           }}
+          disabled={loading}
           className="w-fit rounded-lg bg-richblack-800 px-5 py-3 text-center text-base font-medium text-richblue-5 "
         >
           Cancel

@@ -10,14 +10,15 @@ const ChangeProfilePicture = () => {
   const { token } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
 
-  const [loading, setLoading] = useState(false)
+  const { loading } = useSelector((state) => state.profile)
+
   const [imageFile, setImageFile] = useState(null)
   const [previewImage, setPreviewImage] = useState(null)
   const fileInputRef = useRef()
 
   const setPreviewSource = (file) => {
     const reader = new FileReader()
-    console.log(file)
+    //console.log(file)
     reader.readAsDataURL(file)
     reader.onloadend = () => {
       setPreviewImage(reader.result)
@@ -25,7 +26,7 @@ const ChangeProfilePicture = () => {
   }
 
   const onChangeHandler = (e) => {
-    console.log(e.target.files)
+    //console.log(e.target.files)
     const file = e.target.files[0]
     setImageFile(file)
     setPreviewSource(file)
@@ -37,9 +38,7 @@ const ChangeProfilePicture = () => {
       toast.error("Please Select Profile Picture.")
       return
     }
-    setLoading(true)
     dispatch(updateDisplayPicture(token, { displayPicture: imageFile }))
-    setLoading(false)
   }
   const onClickHandler = () => {
     fileInputRef.current.click()
@@ -76,6 +75,7 @@ const ChangeProfilePicture = () => {
               text={loading ? "Uploading..." : "Upload"}
               type={"submit"}
               customClasses={"flex items-centre"}
+              disabled={loading}
             >
               {!loading && <FiUpload className="text-lg text-richblack-900" />}
             </IconBtn>

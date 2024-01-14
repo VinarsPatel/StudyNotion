@@ -20,7 +20,7 @@ exports.mailSender = async (email, title, body) => {
 
     return info
   } catch (error) {
-    console.log("!! Error occured while sending mail !!")
+    //console.log("!! Error occured while sending mail !!")
     console.error(error)
   }
 }

@@ -1,6 +1,7 @@
 const Course = require("../models/Course")
 const Section = require("../models/Section")
 const SubSection = require("../models/SubSection")
+const { destroyMedia } = require("../utils/mediaDestroyer")
 
 exports.createSection = async (req, res) => {
   try {
@@ -41,7 +42,7 @@ exports.createSection = async (req, res) => {
       data: updatedCourse,
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "Section creation failed.",
@@ -85,7 +86,7 @@ exports.updateSection = async (req, res) => {
       message: "Section updated Succesfully.",
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "Section updation failed.",
@@ -111,7 +112,8 @@ exports.deleteSection = async (req, res) => {
     //🟦🟥🟩🟦🟥🟩 is it necessery to delete section id from the course => ans
 
     deltedSection?.subSections.map(async (ele) => {
-      await SubSection.findByIdAndDelete(ele)
+      const subSec = await SubSection.findByIdAndDelete(ele)
+      if (subSec?.videoUrl.length > 4) await destroyMedia(subSec.videoUrl)
     })
     let updatedCourse
     if (deltedSection) {
@@ -147,7 +149,7 @@ exports.deleteSection = async (req, res) => {
       message: "Section deleted Succesfully.",
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: "Section delation failed.",

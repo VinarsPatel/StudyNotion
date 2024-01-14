@@ -141,7 +141,7 @@ const CourseInformationForm = () => {
     formData.append("instructions", JSON.stringify(data.courseRequirements))
     formData.append("thumbnail", data.courseImage)
     setLoading(true)
-    console.log(formData)
+    //console.log(formData)
     const result = await addCourseDetails(formData, token)
     if (result) {
       dispatch(setCourse(result))

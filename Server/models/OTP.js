@@ -26,13 +26,13 @@ const sendVerificationEmail = async (email, otp) => {
       otpTemplate(otp)
     )
   } catch (error) {
-    console.log("!!  Error occured while sending mail !!")
+    //console.log("!!  Error occured while sending mail !!")
     console.error(error)
   }
 }
 
 otpSchema.pre("save", async function (next) {
-  console.log("New document saved to database")
+  //console.log("New document saved to database")
 
   // 🟩🟥🟦 isNew?? Only send an email when a new document is created
   if (this.isNew) {

@@ -1,10 +1,11 @@
 import React, { useState } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { changePassword } from "../../../../services/operations/settingsAPI"
 import { useForm } from "react-hook-form"
 import IconBtn from "../../../common/IconButton"
 import { useNavigate } from "react-router-dom"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { setLoading } from "../../../../slices/profileSlice"
 
 const inputStyle =
   "rounded-lg bg-richblack-700 p-3 text-[16px] leading-[24px] text-richblack-5 shadow-[0_1px_0_0] shadow-white/50 placeholder:text-richblack-400 focus:outline-none"
@@ -12,6 +13,8 @@ const labelStyle = "text-[14px] text-richblack-5"
 
 function ChangePassword() {
   const { token } = useSelector((state) => state.auth)
+  const { loading } = useSelector((state) => state.profile)
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const [showCurrPassword, setShowCurrPassword] = useState(false)
@@ -24,7 +27,9 @@ function ChangePassword() {
   } = useForm()
 
   const changePasswordHandler = (formData) => {
+    dispatch(setLoading(true))
     changePassword(formData, token)
+    dispatch(setLoading(false))
   }
 
   return (
@@ -36,7 +41,7 @@ function ChangePassword() {
         <h2 className="text-lg font-semibold text-richblack-5 ">Password</h2>
         <div className="flex w-full flex-col gap-6 md1:flex-row">
           <div className="flex flex-col gap-2 lg:w-[48%]">
-            <label htmlfor="currentPassword" className={`${labelStyle}`}>
+            <label htmlFor="currentPassword" className={`${labelStyle}`}>
               Current Password
             </label>
 
@@ -68,7 +73,7 @@ function ChangePassword() {
             )}
           </div>
           <div className="flex flex-col gap-2 lg:w-[48%]">
-            <label htmlfor="newPassword" className={`${labelStyle}`}>
+            <label htmlFor="newPassword" className={`${labelStyle}`}>
               New Password
             </label>
 
@@ -103,6 +108,7 @@ function ChangePassword() {
       </div>
       <div className="flex flex-row justify-end gap-5">
         <button
+          disabled={loading}
           onClick={() => {
             navigate("/dashboard/my-profile")
           }}
@@ -110,7 +116,7 @@ function ChangePassword() {
         >
           Cancel
         </button>
-        <IconBtn type={"submit"} text={"Save"} />
+        <IconBtn type={"submit"} text={"Save"} disabled={loading} />
       </div>
     </form>
   )

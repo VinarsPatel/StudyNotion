@@ -3,7 +3,7 @@ const express = require("express")
 const {
   createCourse,
   updateCourse,
-  //   deleteCourse,
+  deleteCourse,
   getAllCourses,
   getFullCourseDetails,
   getCourseDetails,
@@ -41,6 +41,10 @@ const {
   isAdmin,
   isStudent,
 } = require("../middlewares/auth")
+const {
+  toggleStatus,
+  getCourseProgress,
+} = require("../controllers/CourseProgress")
 
 // ********************************************************************************************************
 //                                      Course routes
@@ -50,6 +54,8 @@ const {
 router.post("/createCourse", auth, isInstructor, createCourse)
 //Update a Course
 router.post("/editCourse", auth, isInstructor, updateCourse)
+//Delete a Course
+router.delete("/deleteCourse", auth, isInstructor, deleteCourse)
 //Add a Section to a Course
 router.post("/addSection", auth, isInstructor, createSection)
 // Update a Section
@@ -86,5 +92,8 @@ router.get("/getReviews", getAllRatingAndReview)
 
 router.get("/getEnrolledCourses", auth, isStudent, getEnrolledCourses)
 router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
+
+router.post("/updateSubSecStatus", auth, isStudent, toggleStatus)
+router.post("/getCourseProgress", auth, isStudent, getCourseProgress)
 
 module.exports = router

@@ -18,7 +18,7 @@ const Cart = () => {
     for (const course of cart) {
       courseIds.push(course._id)
     }
-    console.log(courseIds)
+    //console.log(courseIds)
     buyCourse(token, courseIds, user, dispatch, navigate, false)
 
     setLoading(false)
