@@ -6,8 +6,8 @@ import {
   getDetailsOfCourse,
   updateLectureStatus,
 } from "../services/operations/courseDetailsAPI"
-import LectureBar from "../components/core/ViewCourse/LectureBar"
 import { Loader } from "../components/common/Loader"
+import LectureBar from "../components/core/ViewCourse/LectureBar"
 import {
   BigPlayButton,
   ControlBar,
