@@ -16,7 +16,7 @@ const CourseCard = ({ course }) => {
       <p className="text-base font-medium text-richblack-5">
         {course?.courseName}
       </p>
-      <div className="flex flex-col 3md:flex-row">
+      <div className="flex flex-col  3md:justify-between 3md:flex-row">
         <RatingStars Rating={course?.avgRating} />
         <p className="text-richblack-400">
           {course.ratingAndReview.length} Review
@@ -28,7 +28,7 @@ const CourseCard = ({ course }) => {
           return (
             <div
               key={ind}
-              className="mx-[1px] rounded-md bg-yellow-100 px-1 py-[1px] font-semibold text-richblack-800"
+              className="mx-[1px] rounded-md bg-yellow-100 px-1 py-[1px] font-medium text-sm text-richblack-800"
             >
               {ele}
             </div>

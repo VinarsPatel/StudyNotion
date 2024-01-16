@@ -277,12 +277,12 @@ const CourseInformationForm = () => {
       />
       <div>
         <label htmlFor="courseBenefits" className="labelStyle">
-          Benifits Of The Course <sup className="text-pink-200">*</sup>{" "}
+          Benefits Of The Course <sup className="text-pink-200">*</sup>{" "}
         </label>
         <textarea
           id="courseBenefits"
           name="courseBenefits"
-          placeholder="Enter Benifits Of The Course "
+          placeholder="Enter Benefits Of The Course "
           {...register("courseBenefits", { required: false })}
           className="inputStyle min-h-[140px] w-full"
         />

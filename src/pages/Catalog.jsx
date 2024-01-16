@@ -55,7 +55,7 @@ const Catalog = () => {
               <p>/</p>
               <p className="text-yellow-50">{selectedCategory?.name}</p>
             </div>
-            <h1 className="text-4xl font-semibold leading-[2.75rem] text-richblack-5">
+            <h1 className="text-3xl md1:text-4xl font-semibold leading-[2.75rem] text-richblack-5">
               {selectedCategory?.name}
             </h1>
             <p className="self-stretch  text-base font-medium text-richblack-300 ">
@@ -63,24 +63,30 @@ const Catalog = () => {
             </p>
           </div>
           <div className="flex min-w-[765px] flex-col px-[2rem] py-8 lg:px-[7.5rem]">
-            <div>
-              <h1 className="pb-4 text-4xl font-semibold leading-[2.75rem] text-richblack-5">
-                Courses to get you started
-              </h1>
-              <CourseSlider courses={data?.selectedCourses} />
-            </div>
-            <div>
-              <h1 className="pb-4 text-4xl font-semibold leading-[2.75rem] text-richblack-5">
-                Top Courses
-              </h1>
-              <CourseSlider courses={data?.differentCourses} />
-            </div>
-            <div>
-              <h1 className="pb-4 text-4xl font-semibold leading-[2.75rem] text-richblack-5">
-                Frequently Bought
-              </h1>
-              <CourseSlider courses={data?.mostSellingCourses} />
-            </div>
+            {data?.selectedCourses.length > 0 && (
+              <div>
+                <h1 className="pb-4 text-3xl md1:text-4xl font-semibold leading-[2.75rem] text-richblack-5">
+                  Courses to get you started
+                </h1>
+                <CourseSlider courses={data?.selectedCourses} />
+              </div>
+            )}
+            {data?.differentCourses.length > 0 && (
+              <div>
+                <h1 className="pb-4 text-3xl md1:text-4xl font-semibold leading-[2.75rem] text-richblack-5">
+                  Top Courses
+                </h1>
+                <CourseSlider courses={data?.differentCourses} />
+              </div>
+            )}
+            {data?.mostSellingCourses.length > 0 && (
+              <div>
+                <h1 className="pb-4 text-3xl md1:text-4xl font-semibold leading-[2.75rem] text-richblack-5">
+                  Frequently Bought
+                </h1>
+                <CourseSlider courses={data?.mostSellingCourses} />
+              </div>
+            )}
           </div>
         </div>
       )}

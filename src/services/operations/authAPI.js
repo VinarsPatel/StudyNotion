@@ -77,7 +77,7 @@ export function signUp(
       //console.log(typeof error.response.data.invalidOtp)
       //console.log(typeof true)
       if (error.response.data.invalidOtp !== true) {
-        navigate("/signup")
+        navigate("/login")
       }
     }
     dispatch(setLoading(false))

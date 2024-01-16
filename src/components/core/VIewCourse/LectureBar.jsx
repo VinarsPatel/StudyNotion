@@ -34,7 +34,7 @@ const LectureBar = ({ course, setVideo, id, courseProgress }) => {
               <summary className="ysummary flex items-center justify-between gap-2 bg-richblack-700 px-4 py-2 text-sm font-medium">
                 <div className="flex w-full justify-between">
                   <p className="text-richblack-5 ">{section.sectionName}</p>
-                  <div className="flex gap-2">
+                  <div className="2md:flex gap-2 hidden">
                     <p className="text-yellow-50 ">
                       {section.subSections.length} Lecture
                       {section.subSections.length > 1 && "s"}
@@ -50,7 +50,7 @@ const LectureBar = ({ course, setVideo, id, courseProgress }) => {
                   <div
                     key={ind}
                     onClick={() => setVideo(subSec)}
-                    className={`flex cursor-pointer items-center gap-2 text-lg ${
+                    className={`flex cursor-pointer items-center gap-2 text-base ${
                       subSec._id === id
                         ? "text-[#47A5C5]"
                         : "text-richblack-400"

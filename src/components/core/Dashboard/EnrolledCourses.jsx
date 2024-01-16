@@ -46,10 +46,10 @@ const EnrolledCourses = () => {
           {/* TODO: Modify this Empty State */}
         </p>
       ) : (
-        <div className="my-8 text-richblack-5">
+        <div className="my-8 text-richblack-5 min-w-[360px]">
           {/* Headings */}
           <div className="flex justify-between rounded-t-lg bg-richblack-500 ">
-            <p className="w-[45%] px-5 py-3">Course Name</p>
+            <p className="w-[50%] px-5 py-3">Course Name</p>
             <p className="w-1/4 px-2 py-3">Duration</p>
             <p className="w-1/5 flex-1 px-2 py-3">Progress</p>
           </div>
@@ -62,7 +62,7 @@ const EnrolledCourses = () => {
               key={i}
             >
               <div
-                className="flex w-[45%] px-5 cursor-pointer items-center gap-4 py-3"
+                className="flex  flex-col sm1:flex-row w-[50%] px-5 cursor-pointer items-center gap-4 py-3"
                 onClick={() => {
                   navigate(
                     //   `/view-course/${course?._id}/section/${course.courseContent?.[0]?._id}/sub-section/${course.courseContent?.[0]?.subSection?.[0]?._id}`
@@ -77,7 +77,7 @@ const EnrolledCourses = () => {
                 />
                 <div className="flex max-w-sm flex-col gap-2">
                   <p className="font-semibold">{course.courseName}</p>
-                  <p className="text-xs text-richblack-300">
+                  <p className="hidden sm1:block text-xs text-richblack-300">
                     {course.description.length > 50
                       ? `${course.description.slice(0, 90)}...`
                       : course.description}

@@ -96,7 +96,7 @@ const ViewCourse = () => {
   return !course || !courseProg ? (
     <Loader />
   ) : (
-    <div className="flex min-w-[800px]  flex-col 2md:flex-row">
+    <div className="flex min-w-[400px] min-h-[calc(100vh-3.5rem)]  flex-col sm1:flex-row">
       <div className="min-w-[250px]">
         <LectureBar
           course={course}
@@ -105,7 +105,7 @@ const ViewCourse = () => {
           courseProgress={courseProg}
         />
       </div>
-      <div className="flex min-h-[800px] w-full flex-col gap-5 px-6">
+      <div className="flex pb-6 w-full flex-col gap-5 px-6">
         <div className="flex w-full flex-row-reverse justify-between pt-4 ">
           <IconBtn
             text={
@@ -138,7 +138,7 @@ const ViewCourse = () => {
           key={video.videoUrl}
           aspectRatio="16:9"
           fluid={true}
-          height={500}
+         //  height={500}
         >
           <LoadingSpinner />
           <BigPlayButton position="center" />
