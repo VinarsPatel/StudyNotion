@@ -94,7 +94,10 @@ const ViewCourse = () => {
     } else return false
   }
   return !course || !courseProg ? (
-    <Loader />
+   <div className="flex items-center justify-center h-[calc(100vh-3.5rem)]">
+
+   <Loader />
+  </div>
   ) : (
     <div className="flex min-w-[400px] min-h-[calc(100vh-3.5rem)]  flex-col sm1:flex-row">
       <div className="min-w-[250px]">
