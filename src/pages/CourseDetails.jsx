@@ -38,13 +38,12 @@ const CourseDetails = ({ isStudent }) => {
     const fetchCourseDetails = async () => {
       const courseS = await getFullDetailsOfCourse(courseId)
       if (!courseS) return
-      //console.log(courseS)
       let avgRating = 0
       for (const rat of courseS.ratingAndReview) {
         avgRating += rat.rating
       }
       if (courseS.ratingAndReview.length !== 0)
-        avgRating /= courseS.ratingAndReview
+        avgRating /= courseS.ratingAndReview.length
 
       courseS.avgRating = avgRating
       setCourse(courseS)

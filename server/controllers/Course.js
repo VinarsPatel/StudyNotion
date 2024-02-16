@@ -174,7 +174,12 @@ exports.getFullCourseDetails = async (req, res) => {
           path: "subSections",
         },
       })
-      .populate("ratingAndReview")
+      .populate({
+         path: "ratingAndReview",
+         populate: {
+           path: "user",
+         },
+       })
       .populate("instructor")
       .populate("category")
       .populate("studentsEnrolled")
@@ -182,7 +187,7 @@ exports.getFullCourseDetails = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Course detail",
+      message: "Course details",
       data: course,
     })
   } catch (error) {

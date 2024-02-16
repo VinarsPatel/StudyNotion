@@ -24,8 +24,8 @@ const {
   GET_ALL_INSTRUCTOR_COURSES_API,
   GET_USER_ENROLLED_COURSES_API,
   DELETE_COURSE_API,
-  GET_FULL_COURSE_DETAILS_AUTHENTICATED,
-  GET_COURSE_DETAILS_AUTHENTICATED,
+  GET_FULL_COURSE_DETAILS,
+  GET_COURSE_DETAILS,
   CREATE_RATING_API,
 } = courseEndpoints
 
@@ -356,7 +356,7 @@ export const getDetailsOfCourse = async (courseID, token) => {
   try {
     const response = await apiConnector(
       "POST",
-      GET_COURSE_DETAILS_AUTHENTICATED,
+      GET_COURSE_DETAILS,
       {
         courseID,
       },
@@ -387,7 +387,7 @@ export const getFullDetailsOfCourse = async (courseID) => {
   try {
     const response = await apiConnector(
       "POST",
-      GET_FULL_COURSE_DETAILS_AUTHENTICATED,
+      GET_FULL_COURSE_DETAILS,
       {
         courseID,
       }

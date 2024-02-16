@@ -21,11 +21,11 @@ dbConnect()
 app.use(express.json())
 app.use(cookieParser())
 app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  })
-)
+   cors({
+     origin: "*",
+     credentials: true,
+   })
+ )
 app.use(
   fileUpload({
     useTempFiles: true,
@@ -48,5 +48,5 @@ app.use("/api/v1/reach", contactRoutes)
 // });
 
 app.listen(PORT, () => {
-  //console.log("Server Started at port : " + PORT + ".")
+//   console.log("Server Started at port : " + PORT + ".")
 })
